@@ -1,4 +1,5 @@
  const Header = (props) => {
+  console.log("Header:", props)
   return (
     <h1>{props.course}</h1>
   ) 
@@ -6,6 +7,7 @@
 
 // Part has props part and exercises
 const Part = (props) => {
+  console.log("Part:", props)
   return (
     <>
       <p>
@@ -18,12 +20,12 @@ const Part = (props) => {
 // Content has props part1 &-2 &-3, and exercises1 &-2 &-3
 // Part part= defines that the Part-components part property is defined by Contents props
  const Content = (props) => {
-  console.log(props)
+  console.log("Content:", props)
   return (
     <>
-      <Part part={props.part1} exercises={props.exercises1} />
-      <Part part={props.part2} exercises={props.exercises2} />
-      <Part part={props.part3} exercises={props.exercises3} />
+      <Part part={props.parts[0].name} exercises={props.parts[0].exercises} />
+      <Part part={props.parts[1].name} exercises={props.parts[1].exercises} />
+      <Part part={props.parts[2].name} exercises={props.parts[2].exercises} />
     </>
   )
 
@@ -31,9 +33,10 @@ const Part = (props) => {
  }
 
  const Total = (props) => {
+  console.log("Total:", props)
   return(
     <>
-      <p>Number of exercises {props.exercises1 + props.exercises2 + props.exercises3}</p>
+      <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
     </>
   )
  }
@@ -58,22 +61,15 @@ const App = () => {
     ]
   }
 
+
   return (
     <div>
       <Header course={course.name} />
-      <Content
-        part1={course.parts[0].name} exercises1 = {course.parts[0].exercises}
-        part2={course.parts[1].name} exercises2 = {course.parts[1].exercises}
-        part3={course.parts[2].name} exercises3 = {course.parts[2].exercises}
-      />
-      <Total
-      exercises1 = {course.parts[0].exercises}
-      exercises2 = {course.parts[1].exercises}
-      exercises3 = {course.parts[2].exercises}
-      />
-      
+      <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </div>
   )
+
 }
 
 export default App
