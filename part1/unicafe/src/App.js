@@ -3,60 +3,61 @@ import { useState, useEffect } from 'react'
 
 const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</button>
 
-const StatisticsLine = (props, text) => {
-  <p>{text} {props}</p>
+
+const StatisticsLine = (text, value) => {
+  <p>{text} {value}</p>
 }
+
 
 const App = () => {
   // save clicks of each button to its own state
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
-
-  const [allClicks, setAll] = useState([]) 
+  // const [good, setGood] = useState(0)
+  // const [neutral, setNeutral] = useState(0)
+  // const [bad, setBad] = useState(0)
+  //const [allClicks, setAll] = useState({good: 0, neutral: 0, bad: 0}) 
   
-  const pressButton = (stateVariable, setStateVariable) => () => {
-    console.log("value before click", stateVariable)
-    
-    //update empty array with clicked
-    //setAll(allClicks)
 
-    setStateVariable(stateVariable + 1)
-    // // The below should be better but seems to function similarly to the above
-    // const updatedVariable = stateVariable + 1 
-    // setStateVariable(updatedVariable)
-    
-    // console.log("value after click", stateVariable)
-    //^ doesn't work due to async rendering -> useEffect can be set to run/log after variable changes
+  //single use state for all answers collectively
+  const [feedbacks, setFeedback] = useState({
+    good: 0,
+    neutral: 0,
+    bad: 0
+  })
+
+  const pressButton = (type) => () => {
+    console.log("value before click", feedbacks)
+    setFeedback({
+      ...feedbacks,
+      [type]: feedbacks[type]+1
+    })
   }
   
-  // runs after render has been commited -> cant use stateVariable
-  // hooks should be at top level of react functions
-  useEffect(() => {
-    console.log("value after click/render", good, neutral, bad)
-  }, [good, neutral, bad]) // <-- this effect runs whenever `stateVariable` changes
+    useEffect(() => {
+     console.log("value after click/render", feedbacks)
+   }, [pressButton]) // <-- this effect runs whenever `stateVariable` changes
   
+
   return (
     <div>
     <h1>Give feedback</h1>
     
     <Button 
-    handleClick= {pressButton(good, setGood)}
+    handleClick= {pressButton("good")}
     text="Good"
     />
     <Button 
-    handleClick= {pressButton(neutral, setNeutral)}
+    handleClick= {pressButton("neutral")}
     text="Neutral"
     />
     <Button 
-    handleClick= {pressButton(bad, setBad)}
+    handleClick= {pressButton("bad")}
     text="Bad"
     />
   
     <h2>Statistics</h2>
-    <p>good {good}</p>
-    <p>neutral {neutral}</p>
-    <p>bad {bad}</p>
+    <p>good {feedbacks["good"]}</p>
+    <p>neutral {feedbacks["neutral"]} </p>
+    <p>bad {feedbacks["bad"]}</p>
     </div>
     )
   }
