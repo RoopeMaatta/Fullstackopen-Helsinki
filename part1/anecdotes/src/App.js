@@ -1,23 +1,8 @@
 import { useState } from 'react'
 
-/**
-* Personal notes:
-* 1.12 Random anecdote button:
-*  - length of array
-*  - random number within the length of the array
-*  - button: set selected to random number
-* 
-* 1.13 Vote button
-*  - votesArray with 0's acodring to length of anecdotes array
-*  - button to vote +1 on the votes array location of anecdotes current array
-* 
-* 1.14 Most votes
-*  - find value with most votes in votesArray
-*  - dispaly that location of anecdotes array
-*/
-
-
 const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</button>
+
+
 
 const App = () => {
   const anecdotes = [
@@ -30,10 +15,9 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-  
+
   const [selected, setSelected] = useState(0)
-  let current = selected;
-  let [mostVoted, setmostVoted] = useState(0)  
+  let [mostVoted, setMostVoted] = useState(0)  
   const [points, setPoints] = useState(new Array(anecdotes.length).fill(0));
 
 
@@ -43,13 +27,8 @@ const App = () => {
 
     //make shure the same number is not repeated
     do {randomAnecdote = Math.floor(Math.random() * anecdotes.length) 
-    } while (randomAnecdote === current);
-    
-    current = randomAnecdote
-    
-    return (
+    } while (randomAnecdote === selected);
       setSelected(randomAnecdote)
-      )
     }
     
 
@@ -58,8 +37,7 @@ const App = () => {
       const newPoints = [...points];
       newPoints[current] += 1;
       setPoints(newPoints);
-      if (newPoints[current] > newPoints[mostVoted]) {setmostVoted(current)}
-      //console.log(points, newPoints)
+      if (newPoints[current] > newPoints[mostVoted]) {setMostVoted(current)}
     }
   
 
@@ -68,10 +46,10 @@ const App = () => {
       <div>
       <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
-      <p>Has {points[current]} votes</p>
+      <p>Has {points[selected]} votes</p>
 
       <Button
-      handleClick = {vote(current)} 
+      handleClick = {vote(selected)} 
       text = "vote"/>
 
 
@@ -83,9 +61,7 @@ const App = () => {
       <p>(has {points[mostVoted]} votes)</p>
       <p>{anecdotes[mostVoted]}</p>
 
-
       </div>
-      
       )
     }
     
