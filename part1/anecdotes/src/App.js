@@ -32,40 +32,46 @@ const App = () => {
   ]
   
   const [selected, setSelected] = useState(0)
-  let currentAnecdote = selected;  
+  let current = selected;
+  let [mostVoted, setmostVoted] = useState(0)  
   const [points, setPoints] = useState(new Array(anecdotes.length).fill(0));
+
 
 
   const setRandomAnecdote = () => {
     let randomAnecdote;
-    
+
     //make shure the same number is not repeated
     do {randomAnecdote = Math.floor(Math.random() * anecdotes.length) 
-    } while (randomAnecdote === currentAnecdote);
+    } while (randomAnecdote === current);
     
-    currentAnecdote = randomAnecdote
+    current = randomAnecdote
     
     return (
       setSelected(randomAnecdote)
       )
     }
     
-    const vote = (currentAnecdote) => () => {
+
+
+    const vote = (current) => () => {
       const newPoints = [...points];
-      newPoints[currentAnecdote] += 1;
+      newPoints[current] += 1;
       setPoints(newPoints);
+      if (newPoints[current] > newPoints[mostVoted]) {setmostVoted(current)}
       //console.log(points, newPoints)
     }
   
-    
 
+    
     return (
       <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
-      <p>Has {points[currentAnecdote]} votes</p>
+      <p>Has {points[current]} votes</p>
 
       <Button
-      handleClick = {vote(currentAnecdote)} 
+      handleClick = {vote(current)} 
       text = "vote"/>
 
 
@@ -73,6 +79,11 @@ const App = () => {
       handleClick = {setRandomAnecdote} 
       text = "Random anecdote"/>
       
+      <h2>Anecdote with the most votes</h2>
+      <p>(has {points[mostVoted]} votes)</p>
+      <p>{anecdotes[mostVoted]}</p>
+
+
       </div>
       
       )
