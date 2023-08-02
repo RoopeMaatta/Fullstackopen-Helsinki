@@ -13,6 +13,13 @@ const StatisticsLine = (text, value) => {
 const Statistics = ({feedbacks}) => {
  const allFeedbacks = Object.values(feedbacks).reduce((a, b) => a + b, 0)
  
+ if (allFeedbacks === 0) {
+  return (
+  <>
+  <p>No feedback given</p>
+  </> 
+  )
+ } else {
   return (
     <>
     <p>Good {feedbacks["good"]}</p>
@@ -28,6 +35,7 @@ const Statistics = ({feedbacks}) => {
     </>
     )
   }
+}
   
   
 
