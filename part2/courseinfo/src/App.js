@@ -2,7 +2,7 @@ const Header = ({ course }) => <h1>{course}</h1>
 
 const Total = ({ sum }) => 
 <p> <strong>
-  Number of exercises {sum.reduce((acc, cur) => acc + cur)}
+  Number of exercises {sum.reduce((accumulator, current) => accumulator + current)}
 </strong> </p>
 
 const Part = ({ part }) => 
