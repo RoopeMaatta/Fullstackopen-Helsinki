@@ -1,9 +1,53 @@
 import { useState } from 'react'
 
-const normalizeStr = (str) => str.toLowerCase().replace(/\s+/g, ' ').trim()
 
-const filterPersons = (persons, filterText) => persons.filter(person => person.name.toLowerCase().includes(filterText.toLowerCase()))
+// Filter field
+const Filter = ({filterText, handleFilterTextChange}) => {
+  return (
+    <div>
+      Filter shown with: <input value = {filterText} onChange={handleFilterTextChange} />
+    </div>
+  )
+}
 
+// Form for adding new people to the phonebook
+const PersonForm = ({addContact, newContact, handleInputChange}) => {
+  return(
+    <form onSubmit={addContact}>
+    <div> name: <input value = {newContact.name} name = "name" onChange={handleInputChange}/> </div>
+    <div> number: <input value = {newContact.number} name = "number" onChange = {handleInputChange}/> </div>
+    <div> <button type="submit">add</button> </div>
+    </form>
+  )
+}
+
+// Render all people from the phonebook
+const Persons = ({persons, filterText}) => {
+  const filterPersons = (persons, filterText) => persons.filter(person => person.name.toLowerCase().includes(filterText.toLowerCase()))
+  return (
+    <ul>
+      {filterPersons(persons, filterText).map(person => 
+      <Person person={person}/>)}
+    </ul>
+
+  )
+}
+
+// Render a single persons details
+const Person = ({person}) => {
+  return (
+    <li key={person.id}>{person.name} {person.number} </li>
+  )
+}
+
+
+/**
+ * The above could be moved to
+ * /components folder
+ * and export + import
+ * 
+ * I will currently keep them in the same file for easier accees and editing 
+ */
 
 
 const App = () => {
@@ -22,6 +66,8 @@ const App = () => {
   
   const addContact = (event) => {
     event.preventDefault() // prevent default form submit logic
+    const normalizeStr = (str) => str.toLowerCase().replace(/\s+/g, ' ').trim()
+
     if (persons.some(person => normalizeStr(person.name) === normalizeStr(newContact.name))) {
       alert(`${newContact.name} is already added to phonebook`)
     } else if (newContact.name === "" || normalizeStr(newContact.name) === "") {
@@ -47,20 +93,25 @@ const App = () => {
 
   return (
     <div>
-    <h2>Phonebook</h2>
-    <div>Filter shown with: <input value = {filterText} onChange={handleFilterTextChange} /> </div>
 
-    <h2>Add new a contact</h2>
-    <form onSubmit={addContact}>
-    <div> name: <input value = {newContact.name} name = "name" onChange={handleInputChange}/> </div>
-    <div> number: <input value = {newContact.number} name = "number" onChange = {handleInputChange}/> </div>
-    <div> <button type="submit">add</button> </div>
-    </form>
+    <h2>Phonebook</h2>
+    <Filter 
+      filterText={filterText} 
+      handleFilterTextChange={handleFilterTextChange} 
+    />
+
+    <h3>Add new a contact</h3>
+    <PersonForm
+    addContact={addContact}
+    newContact={newContact}
+    handleInputChange={handleInputChange}
+    />
     
-    <h2>Numbers</h2>
-    <ul> {filterPersons(persons, filterText).map(person => 
-            <li key={person.id}>{person.name} {person.number} </li>)} </ul>
-    
+    <h4>Numbers</h4>
+    <Persons
+      persons={persons}
+      filterText={filterText}
+    />
 
     </div>
     )
