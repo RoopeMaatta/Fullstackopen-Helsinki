@@ -27,7 +27,7 @@ const Persons = ({persons, filterText}) => {
   return (
     <ul>
       {filterPersons(persons, filterText).map(person => 
-      <Person person={person}/>)}
+      <Person key={person.id} person={person}/>)}
     </ul>
 
   )
@@ -36,7 +36,7 @@ const Persons = ({persons, filterText}) => {
 // Render a single persons details
 const Person = ({person}) => {
   return (
-    <li key={person.id}>{person.name} {person.number} </li>
+    <li>{person.name} {person.number} </li>
   )
 }
 
