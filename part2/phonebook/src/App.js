@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 
 // Filter field
@@ -53,15 +54,41 @@ const Person = ({person}) => {
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 },
   ]) 
   const [newContact, setContact] = useState({name: "", number: "", id: ""})
-  const [highId, setHighId] = useState(4)
+  const [highId, setHighId] = useState(1)
   const [filterText, setFilterText] = useState("")
   
-  
+
+
+useEffect(()=>{
+  console.log ("effect")
+     const currentOrigin = window.location.origin; 
+     const API_BASE_URL = currentOrigin.replace('3000', '3001'); // Replace '3000' with '3001'
+
+  axios
+    .get(`${API_BASE_URL}/api/persons`)
+    .then(response => {
+      console.log("Promise done", response, response.data)
+      setPersons(response.data)
+      setHighId(response.data.length)
+    })
+    .catch(error => {
+      if (error.response) {
+        // The request was made and the server responded with a status code outside of the 2xx range
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });    
+}, [])
   
   
   const addContact = (event) => {
