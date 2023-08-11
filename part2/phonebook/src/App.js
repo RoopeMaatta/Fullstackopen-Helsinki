@@ -58,14 +58,14 @@ const App = () => {
   const [newContact, setContact] = useState({name: "", number: "", id: ""})
   const [highId, setHighId] = useState(1)
   const [filterText, setFilterText] = useState("")
-  
+
+  const currentOrigin = window.location.origin; 
+  const API_BASE_URL = currentOrigin.replace('3000', '3001'); // Replace '3000' with '3001'
 
 
 useEffect(()=>{
   console.log ("effect")
-     const currentOrigin = window.location.origin; 
-     const API_BASE_URL = currentOrigin.replace('3000', '3001'); // Replace '3000' with '3001'
-
+     
   axios
     .get(`${API_BASE_URL}/api/persons`)
     .then(response => {
@@ -91,6 +91,7 @@ useEffect(()=>{
 }, [])
   
   
+  
   const addContact = (event) => {
     event.preventDefault() // prevent default form submit logic
     const normalizeStr = (str) => str.toLowerCase().replace(/\s+/g, ' ').trim()
@@ -100,9 +101,15 @@ useEffect(()=>{
     } else if (newContact.name === "" || normalizeStr(newContact.name) === "") {
       alert("Name is empty")
     } else {
-      setPersons(persons.concat(newContact))
-      setContact({name: '', number: '', id: highId + 1})
-      setHighId(highId+1)
+  
+      axios
+      .post(`${API_BASE_URL}/api/persons`, newContact)
+      .then( response => {  
+        console.log(response.data)
+        setPersons(persons.concat(response.data))
+        setContact({name: '', number: '', id: highId + 1})
+        setHighId(highId+1)
+      }) 
     }
   }
   
