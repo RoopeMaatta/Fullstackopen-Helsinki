@@ -1,8 +1,16 @@
 
+
 // Render a single persons details
-const Person = ({person}) => {
+const Person = ({person, deleteContact}) => {
+
+    const handleDelete = () => {
+        deleteContact(person.id)
+    }
+
     return (
-      <li>{person.name} {person.number} </li>
+      <li>{person.name} {person.number}
+      <button type="button" onClick={handleDelete}>Delete</button>
+       </li>
     )
   }
 

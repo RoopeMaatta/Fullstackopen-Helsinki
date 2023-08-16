@@ -4,10 +4,8 @@ import Filter from './components/Filter';
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 
-// Import functions: getAll, create, update:
+// Import functions: getAll, create, update, deleteContact:
 import contactService from "./services/contacts"
-
-
 
 
 const App = () => {
@@ -15,40 +13,21 @@ const App = () => {
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
   ]) 
   const [newContact, setContact] = useState({name: "", number: "", id: ""})
-  const [highId, setHighId] = useState(1)
   const [filterText, setFilterText] = useState("")
 
   
-useEffect(()=>{
-  console.log ("effect")
-     
+useEffect(()=>{   
   contactService
     .getAll()
     .then(response => {
-      console.log("Promise done", response)
       setPersons(response)
-      // setHighId(response.data.length)
     })
     .catch(error => {
-      if (error.response) {
-        // The request was made and the server responded with a status code outside of the 2xx range
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an error
-        console.log('Error', error.message);
-      }
-      console.log(error.config);
+      console.log("Error getting all data from server", error)
     });    
 }, [])
 
 
-  
-  
   const addContact = (event) => {
     event.preventDefault() // prevent default form submit logic
     const normalizeStr = (str) => str.toLowerCase().replace(/\s+/g, ' ').trim()
@@ -62,16 +41,30 @@ useEffect(()=>{
       contactService
       .create(newContact)
       .then( response => {  
-        console.log(response)
         setPersons(persons.concat(response))
-        setContact({name: '', number: ''})
-        //setContact({name: '', number: '', id: highId + 1})
-        //setHighId(highId+1)
+        setContact({name: '', number: ''}) 
       }) 
       .catch(error => {
         console.log("Error in createing new contact", error)
       })
     }
+  }
+
+
+  // WufQ: Saisiko deleteContactsin jotenkin suoraan person:ille ilman että sitä täytyisi kuljettaa persons:ssien läpi?
+  const deleteContact = (id) => {
+    const personToDelete = persons.find((person) => person.id === id);
+    if (personToDelete && window.confirm(`Delete ${personToDelete.name}?`)) {
+      contactService
+       .deleteContact(id)
+       .then(() => {
+        setPersons(persons.filter((person) => person.id !== id));
+      })
+      .catch((error) => {
+        console.log("Error in deleting contact", error);
+      });
+       }
+    
   }
   
   const handleInputChange = (event) => {
@@ -105,6 +98,7 @@ useEffect(()=>{
     <Persons
       persons={persons}
       filterText={filterText}
+      deleteContact={deleteContact}
     />
 
     </div>
