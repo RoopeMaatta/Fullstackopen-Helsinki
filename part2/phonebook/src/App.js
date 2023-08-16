@@ -1,54 +1,13 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import Filter from './components/Filter';
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
+
+// Import functions: getAll, create, update:
+import contactService from "./services/contacts"
 
 
-// Filter field
-const Filter = ({filterText, handleFilterTextChange}) => {
-  return (
-    <div>
-      Filter shown with: <input value = {filterText} onChange={handleFilterTextChange} />
-    </div>
-  )
-}
-
-// Form for adding new people to the phonebook
-const PersonForm = ({addContact, newContact, handleInputChange}) => {
-  return(
-    <form onSubmit={addContact}>
-    <div> name: <input value = {newContact.name} name = "name" onChange={handleInputChange}/> </div>
-    <div> number: <input value = {newContact.number} name = "number" onChange = {handleInputChange}/> </div>
-    <div> <button type="submit">add</button> </div>
-    </form>
-  )
-}
-
-// Render all people from the phonebook
-const Persons = ({persons, filterText}) => {
-  const filterPersons = (persons, filterText) => persons.filter(person => person.name.toLowerCase().includes(filterText.toLowerCase()))
-  return (
-    <ul>
-      {filterPersons(persons, filterText).map(person => 
-      <Person key={person.id} person={person}/>)}
-    </ul>
-
-  )
-}
-
-// Render a single persons details
-const Person = ({person}) => {
-  return (
-    <li>{person.name} {person.number} </li>
-  )
-}
-
-
-/**
- * The above could be moved to
- * /components folder
- * and export + import
- * 
- * I will currently keep them in the same file for easier accees and editing 
- */
 
 
 const App = () => {
@@ -59,19 +18,16 @@ const App = () => {
   const [highId, setHighId] = useState(1)
   const [filterText, setFilterText] = useState("")
 
-  const currentOrigin = window.location.origin; 
-  const API_BASE_URL = currentOrigin.replace('3000', '3001'); // Replace '3000' with '3001'
-
-
+  
 useEffect(()=>{
   console.log ("effect")
      
-  axios
-    .get(`${API_BASE_URL}/api/persons`)
+  contactService
+    .getAll()
     .then(response => {
-      console.log("Promise done", response, response.data)
-      setPersons(response.data)
-      setHighId(response.data.length)
+      console.log("Promise done", response)
+      setPersons(response)
+      // setHighId(response.data.length)
     })
     .catch(error => {
       if (error.response) {
@@ -89,7 +45,8 @@ useEffect(()=>{
       console.log(error.config);
     });    
 }, [])
-  
+
+
   
   
   const addContact = (event) => {
@@ -102,14 +59,18 @@ useEffect(()=>{
       alert("Name is empty")
     } else {
   
-      axios
-      .post(`${API_BASE_URL}/api/persons`, newContact)
+      contactService
+      .create(newContact)
       .then( response => {  
-        console.log(response.data)
-        setPersons(persons.concat(response.data))
-        setContact({name: '', number: '', id: highId + 1})
-        setHighId(highId+1)
+        console.log(response)
+        setPersons(persons.concat(response))
+        setContact({name: '', number: ''})
+        //setContact({name: '', number: '', id: highId + 1})
+        //setHighId(highId+1)
       }) 
+      .catch(error => {
+        console.log("Error in createing new contact", error)
+      })
     }
   }
   
@@ -123,7 +84,6 @@ useEffect(()=>{
 
   
   
-
 
   return (
     <div>
