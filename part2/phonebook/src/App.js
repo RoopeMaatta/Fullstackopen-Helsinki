@@ -14,7 +14,10 @@ const App = () => {
   ]) 
   const [newContact, setContact] = useState({name: "", number: "", id: ""})
   const [filterText, setFilterText] = useState("")
-  const [notification, setNotification] = useState(null)
+  const [notification, setNotification] = useState({
+    message: null,
+    type: "succees", // "succees" or "error"
+  })
 
   
 // get all contacts from Database when app starts
@@ -38,19 +41,19 @@ useEffect(()=>{
 
     // check if person.name is already in database
     if (existingPerson) {
-      if (window.confirm(`${newContact.name} is already added to phonebook, replace the old dumber with a new one?`)) {
+      if (window.confirm(`${newContact.name} is already added to phonebook, replace the old number with a new one?`)) {
         contactService
           .update(existingPerson.id, newContact)
           .then(response => {  
             setPersons(persons.map(person => person.id === existingPerson.id ? response : person))
-            setNotification(`Changed ${existingPerson.name} phone number to ${newContact.number}`)
-             setTimeout( ()=>{
-                setNotification(null)
-              }, 3000)
+            handleNotification(`Changed ${existingPerson.name} phone number to ${newContact.number}` , "succees")
             setContact({name: '', number: ''}) 
           }) 
           .catch(error => {
             console.log("Error in upadating contact", error)
+              //update the persons to match the current state where existing person is missing
+            setPersons(persons.filter(n => n.id !== existingPerson.id))
+            handleNotification(`Information of ${existingPerson.name} has already been removed from the server` , "error")
           })
       }
       // Check if newContact id empty
@@ -63,10 +66,9 @@ useEffect(()=>{
       .create(newContact)
       .then(response => {  
         setPersons(persons.concat(response))
-        setNotification(`Added ${newContact.name}`)
-          setTimeout( ()=>{
-            setNotification(null)
-          }, 3000)
+
+        handleNotification(`Added ${newContact.name}` , "succees")
+
         setContact({name: '', number: ''}) 
       }) 
       .catch(error => {
@@ -87,11 +89,22 @@ useEffect(()=>{
       })
       .catch((error) => {
         console.log("Error in deleting contact", error);
+          
       });
        }
     
   }
   
+  
+  const handleNotification = (message, type) => {
+    setNotification({ message, type });
+    setTimeout(() => {
+      setNotification({ message: null, type: null });
+    }, 5000);
+  };
+  
+
+
   const handleInputChange = (event) => {
     setContact({...newContact, [event.target.name]: event.target.value})
   }
@@ -105,7 +118,7 @@ useEffect(()=>{
     <div>
 
     <h2>Phonebook</h2>
-    <Notification message={notification} type="succees"/>
+    <Notification message={notification.message} type={notification.type}/>
 
     <Filter 
       filterText={filterText} 
