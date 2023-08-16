@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm'
@@ -16,6 +15,7 @@ const App = () => {
   const [filterText, setFilterText] = useState("")
 
   
+// get all contacts from Database when app starts
 useEffect(()=>{   
   contactService
     .getAll()
@@ -32,20 +32,36 @@ useEffect(()=>{
     event.preventDefault() // prevent default form submit logic
     const normalizeStr = (str) => str.toLowerCase().replace(/\s+/g, ' ').trim()
 
-    if (persons.some(person => normalizeStr(person.name) === normalizeStr(newContact.name))) {
-      alert(`${newContact.name} is already added to phonebook`)
+    const existingPerson = persons.find(person => normalizeStr(person.name) === normalizeStr(newContact.name));
+
+    // check if person.name is already in database
+    if (existingPerson) {
+      if (window.confirm(`${newContact.name} is already added to phonebook, replace the old dumber with a new one?`)) {
+        contactService
+          .update(existingPerson.id, newContact)
+          .then(response => {  
+            setPersons(persons.map(person => person.id === existingPerson.id ? response : person))
+            setContact({name: '', number: ''}) 
+          }) 
+          .catch(error => {
+            console.log("Error in upadating contact", error)
+          })
+      }
+      // Check if newContact id empty
     } else if (newContact.name === "" || normalizeStr(newContact.name) === "") {
       alert("Name is empty")
     } else {
-  
+
+    
+    // Create new contact
       contactService
       .create(newContact)
-      .then( response => {  
+      .then(response => {  
         setPersons(persons.concat(response))
         setContact({name: '', number: ''}) 
       }) 
       .catch(error => {
-        console.log("Error in createing new contact", error)
+        console.log("Error in creating new contact", error)
       })
     }
   }
@@ -76,8 +92,6 @@ useEffect(()=>{
   }
 
   
-  
-
   return (
     <div>
 
