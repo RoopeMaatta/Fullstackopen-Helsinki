@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification';
 
 // Import functions: getAll, create, update, deleteContact:
 import contactService from "./services/contacts"
@@ -13,6 +14,7 @@ const App = () => {
   ]) 
   const [newContact, setContact] = useState({name: "", number: "", id: ""})
   const [filterText, setFilterText] = useState("")
+  const [notification, setNotification] = useState(null)
 
   
 // get all contacts from Database when app starts
@@ -41,6 +43,10 @@ useEffect(()=>{
           .update(existingPerson.id, newContact)
           .then(response => {  
             setPersons(persons.map(person => person.id === existingPerson.id ? response : person))
+            setNotification(`Changed ${existingPerson.name} phone number to ${newContact.number}`)
+             setTimeout( ()=>{
+                setNotification(null)
+              }, 3000)
             setContact({name: '', number: ''}) 
           }) 
           .catch(error => {
@@ -52,12 +58,15 @@ useEffect(()=>{
       alert("Name is empty")
     } else {
 
-    
     // Create new contact
       contactService
       .create(newContact)
       .then(response => {  
         setPersons(persons.concat(response))
+        setNotification(`Added ${newContact.name}`)
+          setTimeout( ()=>{
+            setNotification(null)
+          }, 3000)
         setContact({name: '', number: ''}) 
       }) 
       .catch(error => {
@@ -96,6 +105,8 @@ useEffect(()=>{
     <div>
 
     <h2>Phonebook</h2>
+    <Notification message={notification} type="succees"/>
+
     <Filter 
       filterText={filterText} 
       handleFilterTextChange={handleFilterTextChange} 
