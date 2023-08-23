@@ -7,7 +7,26 @@ import countrieService from "../services/countries"
 
 const SingleCountry = ({countryName}) => {
     const [countryData, setCountryData] = useState(null)
+    const [capitalWeather, setCapitalWeather] = useState()
+
+
+    useEffect( ()=>{
+        if (!countryName) {
+            return;  // Exit the effect if countryName is not valid
+        }
+        countrieService
+        .getCapitalWeather(countryName)
+        .then( data => {
+            setCapitalWeather(data)
+        })
+        .catch(error => {
+            console.error('Failed to fetch capital weather:', error);
+        })
+    }, [countryName]) 
+
     
+
+    //get country data
     useEffect( ()=> {
         if (!countryName) {
             return;  // Exit the effect if countryName is not valid
@@ -22,9 +41,32 @@ const SingleCountry = ({countryName}) => {
         })
     }, [countryName]) 
     
+    
+    // // combine get requests, but waits for both to resolve 
+    // useEffect(() => {
+    //     if (!countryName) {
+    //         return;  // Exit the effect if countryName is not valid
+    //     }
+    
+    //     const fetchCountryData = countrieService.getCountry(countryName);
+    //     const fetchCapitalWeatherData = countrieService.getCapitalWeather(countryName);
+    
+    //     Promise.all([fetchCountryData, fetchCapitalWeatherData])
+    //     .then(([countryResponse, capitalWeatherResponse]) => {
+    //         setCountryData(countryResponse);
+    //         setCapitalWeather(capitalWeatherResponse);
+    //     })
+    //     .catch(error => {
+    //         console.error('Failed to fetch data:', error);
+    //     });
+    
+    // }, [countryName]);
+
+
     if (!countryData) {
         return <div>Loading...</div>;
     }
+    
     
     return (
         <div>
@@ -39,8 +81,13 @@ const SingleCountry = ({countryName}) => {
         {countryData.flags && countryData.flags.png && (
             <img src={countryData.flags.png} alt={`Flag of ${countryData.name?.common || "Unknown"}`} width="200" />
             )}
-            </div>
-            );
+
+        <div> {!capitalWeather ? "Loading weather data..." : capitalWeather } </div>
+        
+        </div>
+
+            
+            )
             
         }
         
