@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react' //useEffect
+import { useEffect, useState } from 'react'
 import countrieService from "./services/countries"
 
 import FindCountries from './components/FindCountries';
