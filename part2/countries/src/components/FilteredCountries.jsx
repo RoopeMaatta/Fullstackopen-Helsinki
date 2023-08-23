@@ -2,21 +2,9 @@ import { useEffect, useState } from 'react'
 import SingleCountry from './SingleCountry'
 
 // Render a list of filtered countries
-const FilteredCountries = ({filteredCountries}) => {
-  const [selectedCountryIndex, setSelectedCountryIndex] = useState(null)
+const FilteredCountries = ({filteredCountries, onSelectCountry}) => {
   
-  // useEffect to reset selectedCountryIndex when filteredCountries changes
-  useEffect(() => {
-    setSelectedCountryIndex(null);
-  }, [filteredCountries]);
   
-  // when button clicked show the country
-  if (selectedCountryIndex !== null) {
-    return (
-      <SingleCountry countryName={filteredCountries[selectedCountryIndex]}/>
-      )
-      
-    }
     
     return (
       <ul>
@@ -24,9 +12,7 @@ const FilteredCountries = ({filteredCountries}) => {
         return (
           <li key={index}> {country} 
           <button
-          onClick={()=>{
-            setSelectedCountryIndex(index)
-            }}>
+          onClick={()=>onSelectCountry(index) }>
           Show
           </button>
           </li>
