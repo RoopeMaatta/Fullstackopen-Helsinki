@@ -9,6 +9,9 @@ const SingleCountry = ({countryName}) => {
     const [countryData, setCountryData] = useState(null)
     
     useEffect( ()=> {
+        if (!countryName) {
+            return;  // Exit the effect if countryName is not valid
+        }
         countrieService
         .getCountry(countryName)
         .then( data => {
