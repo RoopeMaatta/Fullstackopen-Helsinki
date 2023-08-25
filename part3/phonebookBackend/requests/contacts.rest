@@ -23,3 +23,14 @@ GET {{baseUrl}}/info
 
 #Delete person 1
 DELETE {{baseUrl}}/api/persons/1
+
+###
+
+#Post person to server (remember epty line between header and request body)
+POST {{baseUrl}}/api/persons
+Content-Type: application/json
+
+{
+    "name": "wuffeli tryffeli",
+    "number": "040 3621 4269"
+}
