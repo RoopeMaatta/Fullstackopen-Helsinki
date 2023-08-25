@@ -4,7 +4,22 @@ const morgan = require("morgan")
 const app = express()
 
 app.use(express.json())
-app.use(morgan("tiny"))
+// app.use(morgan("tiny"))
+
+
+
+
+// Define a new format string, similar to "tiny" but with :postPayload at the end
+morgan.format('tinyWithPost', ':method :url :status :res[content-length] - :response-time ms :postPayload');
+
+// Create a token for the JSON payload of POST requests
+morgan.token('postPayload', function (req, res) {
+  return req.method === 'POST' ? JSON.stringify(req.body) : '';
+});
+
+// Use the new format string
+app.use(morgan('tinyWithPost'));
+
 
 
 
