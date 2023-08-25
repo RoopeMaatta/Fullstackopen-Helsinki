@@ -3,7 +3,7 @@ const app = express()
 
 app.use(express.json())
 
-let contacts = [
+let persons = [
   
   { 
     "id": 1,
@@ -35,31 +35,35 @@ app.get('/', (request, response) => {
 app.get('/info', (request, response) => {
   const currentDate = new Date().toString() // toLocaleString()
   response.send(`
-    <p>Phonebook has info for ${contacts.length} people</p>
+    <p>Phonebook has info for ${persons.length} people</p>
     <p>${currentDate}</p>
     `)
 })
 
-app.get('/api/contacts', (request, response) => {
-  response.json(contacts)
+app.get('/api/persons', (request, response) => {
+  response.json(persons)
 })
 
-app.get('/api/contacts/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
-  const contact = contacts.find(contact => contact.id === id)
+  const person = persons.find(person => person.id === id)
   
-  if (contact) {
-    response.json(contact)
-  } else {
-    response.status(404).end()
+  if (person) {
+    response.json(person)
+  } else { 
+    response.status(404).json({ error: `Person with id ${id} not found` })
+    
+    // // if content-type not set on ipad/safari a downloa alert pops up
+    // response.set('Content-Type', 'text/plain')
+    // response.status(404).end()
   }
 })
 
 
 
-app.delete('/api/contacts/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
-  contacts = contacts.filter(contact => contact.id !== id)
+  persons = persons.filter(person => person.id !== id)
   
   response.status(204).end()
 })
@@ -67,14 +71,14 @@ app.delete('/api/contacts/:id', (request, response) => {
 
 
 const generateId = () => {
-  const maxId = contacts.length > 0
-  ? Math.max(...contacts.map(n => n.id))
+  const maxId = persons.length > 0
+  ? Math.max(...persons.map(n => n.id))
   : 0
   return maxId + 1
 }
 
 
-//   app.post('/api/contacts', (request, response) => {
+//   app.post('/api/persons', (request, response) => {
 //     const body = request.body
 
 //     if (!body.content) {
@@ -83,15 +87,15 @@ const generateId = () => {
 //       })
 //     }
 
-//     const contact = {
+//     const person = {
 //       name: body.content,
 //       number: body.important || false,
 //       id: generateId(),
 //     }
 
-//     contacts = contacts.concat(contact)
+//     persons = persons.concat(person)
 
-//     response.json(contact)
+//     response.json(person)
 //   })
 
 

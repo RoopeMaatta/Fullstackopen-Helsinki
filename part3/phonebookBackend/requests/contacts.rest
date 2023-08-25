@@ -1,10 +1,19 @@
+@baseUrl = http://localhost:3001
 
-GET http://localhost:3001/api/contacts
-
-###
-
-GET http://localhost:3001/api/contacts/3
+# Get all persons
+GET {{baseUrl}}/api/persons
 
 ###
 
-GET http://localhost:3001/info
+# Get a person
+GET {{baseUrl}}/api/persons/3
+
+###
+
+# Get a nonexisting person
+GET {{baseUrl}}/api/persons/9000
+
+###
+
+# Get info
+GET {{baseUrl}}/info
