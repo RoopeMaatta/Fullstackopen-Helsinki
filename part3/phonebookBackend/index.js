@@ -80,13 +80,25 @@ const generateId = () => {
 
   app.post('/api/persons', (request, response) => {
     const body = request.body
+    
+    const isDuplicateName = 
+      persons.map(n => n.name.toLowerCase())
+        .includes(body.name.toLowerCase()) 
 
+    // handle missing content
     if (!body.name || !body.number) {
       return response.status(400).json({ 
-        error: 'content missing' 
+        error: 'content missing: name and/or number missing' 
       })
     }
 
+    // handle duplicate name
+    if (isDuplicateName) {
+      return response.status(409).json({ 
+        error: 'Name must be unique, name already in phone book' 
+      })
+    }
+    
     const person = {
       name: body.name,
       number: body.number,
