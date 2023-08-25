@@ -17,3 +17,9 @@ GET {{baseUrl}}/api/persons/9000
 
 # Get info
 GET {{baseUrl}}/info
+
+
+###
+
+#Delete person 1
+DELETE {{baseUrl}}/api/persons/1

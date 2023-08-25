@@ -34,3 +34,9 @@
 countries names 
     - filter with input
     - 
+
+
+///////////
+
+//vs code REST client plugin
+-> test api requests
