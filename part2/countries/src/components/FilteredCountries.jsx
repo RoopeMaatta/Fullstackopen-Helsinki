@@ -1,10 +1,6 @@
-import { useEffect, useState } from 'react'
-import SingleCountry from './SingleCountry'
 
 // Render a list of filtered countries
 const FilteredCountries = ({filteredCountries, onSelectCountry}) => {
-  
-  
     
     return (
       <ul>

@@ -9,23 +9,6 @@ const SingleCountry = ({countryName}) => {
     const [countryData, setCountryData] = useState(null)
     const [capitalWeather, setCapitalWeather] = useState()
 
-
-    useEffect( ()=>{
-        if (!countryName) {
-            return;  // Exit the effect if countryName is not valid
-        }
-        countrieService
-        .getCapitalWeather(countryName)
-        .then( data => {
-            setCapitalWeather(data)
-        })
-        .catch(error => {
-            console.error('Failed to fetch capital weather:', error);
-        })
-    }, [countryName]) 
-
-    
-
     //get country data
     useEffect( ()=> {
         if (!countryName) {
@@ -40,6 +23,24 @@ const SingleCountry = ({countryName}) => {
             console.error('Failed to fetch single country:', error);
         })
     }, [countryName]) 
+
+    
+
+    // get weather data
+    useEffect( ()=>{
+        if (!countryName) {
+            return;  // Exit the effect if countryName is not valid
+        }
+        countrieService
+        .getCapitalWeather(countryName)
+        .then( data => {
+            setCapitalWeather(data)
+        })
+        .catch(error => {
+            console.error('Failed to fetch capital weather:', error);
+        })
+    }, [countryName]) 
+
     
     
     // // combine get requests, but waits for both to resolve 
@@ -74,9 +75,9 @@ const SingleCountry = ({countryName}) => {
         
         <DataItem label="Capital" value={countryData.capital?.[0]} />
         <DataItem label="Area" value={countryData.area ? `${countryData.area} sq. km` : null} />
-        <DataItem label="Population" value={countryData.population} />
+        <DataItem label="Population" value={countryData?.population} />
         
-        <LanguageList label="Language" values={countryData.languages} />
+        <LanguageList label="Language" values={countryData?.languages} />
         
         {countryData.flags && countryData.flags.png && (
             <img src={countryData.flags.png} alt={`Flag of ${countryData.name?.common || "Unknown"}`} width="200" />

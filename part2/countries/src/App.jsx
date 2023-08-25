@@ -18,6 +18,10 @@ const App = () => {
     setFilterText(event.target.value)
   }
 
+  // useEffect(()=>{
+  //   console.log(filterText)
+  // },[filterText])
+
 
 //get all countries common names in the begining
 useEffect(() => {
