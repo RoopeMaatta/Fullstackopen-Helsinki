@@ -1,9 +1,13 @@
 import axios from 'axios'
 
-const currentOrigin = window.location.origin; 
-const API_BASE_URL = currentOrigin.replace('3000', '3001'); // Replace '3000' with '3001'
-const baseUrl = `${API_BASE_URL}/api/persons`
 
+
+
+// const currentOrigin = window.location.origin; 
+// const API_BASE_URL = currentOrigin.replace('3000', '3001'); // Replace '3000' with '3001'
+// const baseUrl = `${API_BASE_URL}/api/persons`
+
+const baseUrl ="https://phonebook-helsinkifullstack3-1x.onrender.com/api/persons"
 
 
 const getAll = () => {

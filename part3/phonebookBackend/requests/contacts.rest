@@ -1,4 +1,5 @@
-@baseUrl = http://localhost:3001
+#@baseUrl = http://localhost:3001
+@baseUrl = https://phonebook-helsinkifullstack3-1x.onrender.com
 
 # Get all persons
 GET {{baseUrl}}/api/persons
