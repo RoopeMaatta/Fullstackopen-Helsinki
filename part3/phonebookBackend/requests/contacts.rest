@@ -35,3 +35,14 @@ Content-Type: application/json
     "name": "Wuffeli Tryffeli",
     "number": "040 3621 4269"
 }
+
+###
+
+#Put update person in server
+PUT {{baseUrl}}/api/persons/64f0beeb524adb946f09505a
+Content-Type: application/json
+
+{
+    "name": "Edid.Wuffeli Tryffeli",
+    "number": "Edid.040 3621 4269"
+}
