@@ -10,7 +10,7 @@ import contactService from "./services/contacts"
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
+    { name: 'Arto localNotFromDB', number: '040-123456', id: 1 },
   ]) 
   const [newContact, setContact] = useState({name: "", number: "", id: ""})
   const [filterText, setFilterText] = useState("")
@@ -50,11 +50,26 @@ useEffect(()=>{
             setContact({name: '', number: ''}) 
           }) 
           .catch(error => {
-            console.log("Error in upadating contact", error)
-              //update the persons to match the current state where existing person is missing
-            setPersons(persons.filter(n => n.id !== existingPerson.id))
-            handleNotification(`Information of ${existingPerson.name} has already been removed from the server` , "error")
+            // Log the error to console for debugging
+            console.log("Error in updating contact", error);
+          
+            // Check if it's a validator error
+            if (error.response && error.response.data && error.response.data.error) {
+              console.log(error.response.data.error);
+              handleNotification(`Validation failed: ${error.response.data.error}`, "error");
+            }
+            // Check if the error is a 404 Not Found
+            else if (error.response && error.response.status === 404) {
+              // Update the persons to match the current state where the existing person is missing
+              setPersons(persons.filter(n => n.id !== existingPerson.id));
+              handleNotification(`Information of ${existingPerson.name} has already been removed from the server`, "error");
+            } 
+            // General error handler
+            else {
+              handleNotification("An unexpected error occurred", "error");
+            }
           })
+          
       }
       // Check if newContact id empty
     } else if (newContact.name === "" || normalizeStr(newContact.name) === "") {
@@ -72,6 +87,8 @@ useEffect(()=>{
         setContact({name: '', number: ''}) 
       }) 
       .catch(error => {
+        handleNotification(error.response.data.error, "error")
+        console.log(error.response.data.error)
         console.log("Error in creating new contact", error)
       })
     }
@@ -100,7 +117,7 @@ useEffect(()=>{
     setNotification({ message, type });
     setTimeout(() => {
       setNotification({ message: null, type: null });
-    }, 5000);
+    }, 8000);
   };
   
 

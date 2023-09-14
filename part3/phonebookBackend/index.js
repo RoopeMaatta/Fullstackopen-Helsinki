@@ -93,7 +93,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 
 
-app.post('/api/persons', async (request, response, next) => {  // Add next here
+app.post('/api/persons', async (request, response, next) => {  
   try {
     const body = request.body;
     
@@ -119,7 +119,7 @@ app.post('/api/persons', async (request, response, next) => {  // Add next here
       //id: generateId(),
     });
 
-    const savedPerson = await person.save();  // Use await here as well
+    const savedPerson = await person.save();  
     response.json(savedPerson);
 
   } catch (error) {  
@@ -137,7 +137,11 @@ app.put('/api/persons/:id', (request, response, next) => {
     number,
   };
   
-  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+  Person.findByIdAndUpdate(
+    request.params.id,
+    {name, number},
+    { new: true, runValidators: true, context: "query"})
+    // person, { new: true })
   .then(updatedPerson => {
     response.json(updatedPerson)
   })
@@ -159,7 +163,10 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } 
+  }  else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message })
+
+  }
 
   next(error)
 }
