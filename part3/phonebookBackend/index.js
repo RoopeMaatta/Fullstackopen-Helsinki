@@ -54,14 +54,14 @@ app.get('/api/persons', (request, response, next) => {
   Person.find({}).then(persons => {
     response.json(persons)
   })
-  .catch(error =>next(error))
+    .catch(error => next(error))
 })
 
 
 
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
-    .then(person=> {
+    .then(person => {
       if (person) {
         response.json(person)
       } else {
@@ -81,10 +81,10 @@ app.get('/api/persons/:id', (request, response, next) => {
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
     .then(result => {
-      response.status(204).end() 
+      response.status(204).end()
     })
     .catch(error => next(error))
-  
+
   // const id = Number(request.params.id)
   // persons = persons.filter(person => person.id !== id)
   // response.status(204).end()
@@ -93,23 +93,23 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 
 
-app.post('/api/persons', async (request, response, next) => {  
+app.post('/api/persons', async (request, response, next) => {
   try {
     const body = request.body;
-    
+
     const isDuplicateName = await Person.findOne({ name: new RegExp(`^${body.name}$`, 'i') });
 
     // handle missing content
     if (!body.name || !body.number) {
-      return response.status(400).json({ 
-        error: 'content missing: name and/or number missing' 
+      return response.status(400).json({
+        error: 'content missing: name and/or number missing'
       });
     }
 
     // handle duplicate name
     if (isDuplicateName) {
-      return response.status(409).json({ 
-        error: 'Name must be unique, name already in phone book' 
+      return response.status(409).json({
+        error: 'Name must be unique, name already in phone book'
       });
     }
 
@@ -119,11 +119,11 @@ app.post('/api/persons', async (request, response, next) => {
       //id: generateId(),
     });
 
-    const savedPerson = await person.save();  
+    const savedPerson = await person.save();
     response.json(savedPerson);
 
-  } catch (error) {  
-    next(error);  
+  } catch (error) {
+    next(error);
   }
 });
 
@@ -136,16 +136,16 @@ app.put('/api/persons/:id', (request, response, next) => {
     name,
     number,
   };
-  
+
   Person.findByIdAndUpdate(
     request.params.id,
-    {name, number},
-    { new: true, runValidators: true, context: "query"})
+    { name, number },
+    { new: true, runValidators: true, context: "query" })
     // person, { new: true })
-  .then(updatedPerson => {
-    response.json(updatedPerson)
-  })
-  .catch(error => next(error))
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
 })
 
 

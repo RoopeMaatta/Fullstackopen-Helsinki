@@ -21,10 +21,10 @@ mongoose.connect(url)
     console.log('error connecting to MongoDB:', error.message)
   })
 
-  const phoneNumberValidator = function(value) {
-    const regularExpression = /^(\d{2,3})-(\d+)$/
-    return regularExpression.test(value)
-  }
+const phoneNumberValidator = function(value) {
+  const regularExpression = /^(\d{2,3})-(\d+)$/
+  return regularExpression.test(value)
+}
 
 // define schema
 const personSchema = new mongoose.Schema({
