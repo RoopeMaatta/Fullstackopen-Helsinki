@@ -1,0 +1,21 @@
+@baseUrl = http://localhost:3003
+#@baseUrl = https://phonebook-helsinkifullstack3-1x.onrender.com
+
+# Get all blogs
+GET {{baseUrl}}/api/blogs
+
+###
+
+#Post blog to server (remember empty line between header and request body)
+POST {{baseUrl}}/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Wuffeli down the rabbit hole blog",
+    "author": "Haru bun",
+    "url": "www.totallyfab.com/621",
+    "likes": 69
+}
+
+###
+
