@@ -6,8 +6,6 @@ mongoose.set('strictQuery',false)
 // user Roope
 
 
-
-
 // const url = `mongodb+srv://Roope:${password}@studiescluster.3cpluro.mongodb.net/phonebookBackend?retryWrites=true&w=majority`
 const url = process.env.MONGODB_URI
 console.log("connecting to", url)
