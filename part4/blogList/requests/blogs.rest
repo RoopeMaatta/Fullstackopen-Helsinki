@@ -11,10 +11,10 @@ POST {{baseUrl}}/api/blogs
 Content-Type: application/json
 
 {
-    "title": "Wuffeli down the rabbit hole blog",
-    "author": "Haru bun",
-    "url": "www.totallyfab.com/621",
-    "likes": 69
+    "title": "MahBlog",
+    "author": "Bakawuf",
+    "url": "www.letMeGo.com/621",
+    "likes": 3
 }
 
 ###
