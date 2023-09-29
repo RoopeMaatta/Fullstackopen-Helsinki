@@ -37,6 +37,41 @@ const favouriteBlog = (blogs) => {
 
 
 
+// Group array by author and return a object with authors as keys
+const groupByAuthor = (blogs) => {
+  return blogs.reduce((acc, currentBlog) => {
+  // check id the accumulator object does not have aproperty with the name of current author
+    if(!acc[currentBlog.author]) {
+      acc[currentBlog.author] = [];
+    }
+
+    // Add the blog to the authors object
+    acc[currentBlog.author].push(currentBlog)
+    return acc
+  }, {})
+}
+
+
+// find the author with the most blogs
+const mostBlogs = (blogs) => {
+
+  const groupedByAuthor = groupByAuthor(blogs)
+
+  let mostBlogsAuthor = ""
+  let mostBlogsCount = 0
+
+
+  for (let author in groupedByAuthor) {
+    if (groupedByAuthor[author].length > mostBlogsCount) {
+      mostBlogsAuthor = author
+      mostBlogsCount = groupedByAuthor[author].length
+    }
+  }
+  return {
+    author: mostBlogsAuthor,
+    blogs: mostBlogsCount
+  }
+}
 
 
 
@@ -45,5 +80,7 @@ module.exports = {
   dummy,
   totalLikes,
   favouriteBlog,
+  mostBlogs,
+  groupByAuthor,
 }
 
