@@ -49,12 +49,12 @@ describe("total likes", () => {
 // Finds the blog with the most likes
 describe("favourite blog", () => {
 
-  test("of empty list is zero", () => {
+  test("of empty list message: No blogs found", () => {
     const result = listHelper.favouriteBlog(emptyList)
     expect(result).toBe("No blogs found")
   })
 
-  test("when list has only one blog equals the likes of that", () => {
+  test("when list has only one blog equals the likes of that blog", () => {
     const result = listHelper.favouriteBlog(listWithOneBlog)
     expect(result).toEqual(
       {
@@ -76,7 +76,7 @@ describe("favourite blog", () => {
     )
   })
 
-  test("of a list with missing values / empty objects", () => {
+  test("of a list with missing values / empty objects ignore nonvalid data", () => {
     const result = listHelper.favouriteBlog(listWithBlogsMissingValues)
     expect(result).toEqual(
       {
