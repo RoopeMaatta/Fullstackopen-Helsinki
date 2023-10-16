@@ -73,7 +73,20 @@ const mostBlogs = (blogs) => {
   }
 }
 
+// find the author with the most likes
+const mostLikes = (allBlogs) => {
+  const groupedByAuthor = groupByAuthor(allBlogs)
 
+  return Object.entries(groupedByAuthor).reduce((currentAuthorWithMostLikes, [author, blogs]) => {
+    const authorTotalLikes = blogs.reduce((sumOfLikes, blog) => sumOfLikes + blog.likes, 0)
+
+    return authorTotalLikes > currentAuthorWithMostLikes.likes
+      ? { author, likes: authorTotalLikes }
+      : currentAuthorWithMostLikes
+
+  }, { author: "", likes: 0 })
+
+}
 
 
 module.exports = {
@@ -82,5 +95,6 @@ module.exports = {
   favouriteBlog,
   mostBlogs,
   groupByAuthor,
+  mostLikes,
 }
 

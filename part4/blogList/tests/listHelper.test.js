@@ -91,6 +91,7 @@ describe("favourite blog", () => {
   describe("group by author", () => {
     test("from multiple blogs", () => {
       const result = listHelper.groupByAuthor(listWithMultipleBlogs)
+      // console.log(listHelper.groupByAuthor(listWithMultipleBlogs))
       expect(result).toEqual(
         {
           "Michael Chan": [
@@ -188,8 +189,39 @@ describe("favourite blog", () => {
 
   })
 
-  // emptyList,
-  // listWithOneBlog,
+  // Find the author with most toal likes and count the likes together
+  describe("Total likes", () => {
+    test("of multiple blogs is calculated", () => {
+      const result = listHelper.mostLikes(listWithMultipleBlogs)
+      expect(result).toEqual(
+        {
+          author: "Edsger W. Dijkstra",
+          likes: 17
+        }
+      )
+    })
+
+    test("of empty list", () => {
+      const result = listHelper.mostLikes(emptyList)
+      expect(result).toEqual(
+        {
+          author: "",
+          likes: 0
+        }
+      )
+    })
+
+    test("of list with one blog", () => {
+      const result = listHelper.mostLikes(listWithOneBlog)
+      expect(result).toEqual(
+        {
+          author: "Edsger W. Dijkstra",
+          likes: 5
+        }
+      )
+    })
+
+  })
 
 
 } )
