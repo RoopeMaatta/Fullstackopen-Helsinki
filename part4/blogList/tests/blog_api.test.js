@@ -99,7 +99,7 @@ test("if 'likes'-property is missing and it will be set to 0", async () => {
     title: "How to miss liking bones",
     author: "el Doggo",
     url: "www.sendbones.us",
-    // likes: 5,
+    // likes is missing and should be set to 0
   }
 
   await api
@@ -117,3 +117,35 @@ test("if 'likes'-property is missing and it will be set to 0", async () => {
   expect(likesAll.every(like => typeof like === "number")).toBeTruthy()
   expect(likesAll.filter(like => like === 0)).toHaveLength(1)
 })
+
+
+test("if creating blog with missing 'title' responds with status 400 Bad Request", async () => {
+  const newBlogWithoutTitle = {
+    // title is missing
+    author: "el Doggo",
+    url: "www.sendusbones.us",
+    likes: 6
+  }
+
+  await api
+    .post("/api/blogs")
+    .send(newBlogWithoutTitle)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+});
+
+
+test("if creating blog with missing 'url' responds with status 400 Bad Request", async () => {
+  const newBlogWithoutUrl = {
+    title: "This is the story of my liver",
+    author: "el Doggo",
+    // url is missing
+    likes: 6
+  }
+
+  await api
+    .post("/api/blogs")
+    .send(newBlogWithoutUrl)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+});
