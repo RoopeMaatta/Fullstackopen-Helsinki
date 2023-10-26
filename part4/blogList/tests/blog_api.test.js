@@ -70,3 +70,25 @@ test('all blogs have "id" property', async () => {
 
 
 })
+
+test("a valid new blog can be added", async () => {
+  const newBlog = {
+    title: "how to bork during a new dawn",
+    author: "Le Kitsumon",
+    url: "www.newblog.us",
+    likes: 5,
+  }
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get("/api/blogs")
+  const titles = response.body.map(r => r.title)
+
+  expect(response.body).toHaveLength(initialBlogs.length +1)
+  expect(titles).toContain("how to bork during a new dawn")
+
+})
