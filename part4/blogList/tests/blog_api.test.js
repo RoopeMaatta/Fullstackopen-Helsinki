@@ -11,13 +11,13 @@ const initialBlogs = [
     title: 'HTML is easy',
     author: "Sir Wuffelius",
     url: "www.Awuuh.com/blogs",
-    likes: "3",
+    likes: 3,
   },
   {
     title: 'Browser can execute only JavaScript',
     author: "Mister Nekkonen",
     url: "www.Miumau.fi/bonks",
-    likes: "69",
+    likes: 6
   },
 ]
 
@@ -91,4 +91,29 @@ test("a valid new blog can be added", async () => {
   expect(response.body).toHaveLength(initialBlogs.length +1)
   expect(titles).toContain("how to bork during a new dawn")
 
+})
+
+
+test("if 'likes'-property is missing and it will be set to 0", async () => {
+  const newBlog = {
+    title: "How to miss liking bones",
+    author: "el Doggo",
+    url: "www.sendbones.us",
+    // likes: 5,
+  }
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+
+
+  const response = await api.get('/api/blogs')
+
+  const likesAll = response.body.map(r => r.likes)
+
+  expect(likesAll.every(like => typeof like === "number")).toBeTruthy()
+  expect(likesAll.filter(like => like === 0)).toHaveLength(1)
 })
