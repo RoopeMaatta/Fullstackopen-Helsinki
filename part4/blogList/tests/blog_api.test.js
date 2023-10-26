@@ -60,3 +60,13 @@ test('a spesific blog is within returned blogs', async () => {
 
 
 })
+
+test('all blogs have "id" property', async () => {
+  const response = await api.get('/api/blogs')
+
+  const allHaveId = response.body.every(obj => obj.id !== undefined);
+
+  expect(allHaveId).toBe(true);
+
+
+})
