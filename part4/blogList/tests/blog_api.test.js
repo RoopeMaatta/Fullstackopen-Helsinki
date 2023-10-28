@@ -171,3 +171,31 @@ test("deleting a blog", async () => {
   const titles = blogsAfterDeletion.map(blog => blog.title);
   expect(titles).not.toContain("HTML is easy");
 })
+
+
+test("updating a blog", async () => {
+  const blogToBeUpdated = savedBlogs[0]
+
+  const updatedData = {
+    title: "This be updated title",
+    url: "www.new.us",
+    likes: 3,
+  };
+
+  const response = await api
+    .put(`/api/blogs/${blogToBeUpdated.id}`)
+    .send(updatedData)
+    .expect(200)
+
+  // Validate that the response has the updated data
+  expect(response.body.title).toEqual(updatedData.title);
+  expect(response.body.url).toEqual(updatedData.url);
+  expect(response.body.likes).toEqual(updatedData.likes);
+
+  // Fetch the updated blog from the database and validate the updates
+  const updatedBlog = await Blog.findById(blogToBeUpdated.id);
+  expect(updatedBlog.title).toEqual(updatedData.title);
+  expect(updatedBlog.url).toEqual(updatedData.url);
+  expect(updatedBlog.likes).toEqual(updatedData.likes);
+
+})
