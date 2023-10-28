@@ -4,7 +4,7 @@ const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
 
-// Initial database setup //
+// Initial testing database setup //
 
 const initialBlogs = [
   {
@@ -21,13 +21,21 @@ const initialBlogs = [
   },
 ]
 
+
+// Store the saved blog instances in this array
+let savedBlogs = [];
+
 beforeEach(async () => {
-  await Blog.deleteMany({})
-  let blogObject = new Blog(initialBlogs[0])
-  await blogObject.save()
-  blogObject = new Blog(initialBlogs[1])
-  await blogObject.save()
-})
+  await Blog.deleteMany({});
+
+  savedBlogs = []; // Clear the array
+
+  for (let blog of initialBlogs) {
+    const blogObject = new Blog(blog);
+    const savedBlog = await blogObject.save();
+    savedBlogs.push(savedBlog); // Store each saved blog instance
+  }
+});
 
 
 // TESTS //
@@ -149,3 +157,17 @@ test("if creating blog with missing 'url' responds with status 400 Bad Request",
     .expect(400)
     .expect('Content-Type', /application\/json/)
 });
+
+
+test("deleting a blog", async () => {
+  const blogToBeDeleted = savedBlogs[0]
+
+  await api
+    .delete(`/api/blogs/${blogToBeDeleted.id}`)
+    .expect(204)
+
+  // Additional assertion to ensure it's actually deleted
+  const blogsAfterDeletion = await Blog.find({});
+  const titles = blogsAfterDeletion.map(blog => blog.title);
+  expect(titles).not.toContain("HTML is easy");
+})
