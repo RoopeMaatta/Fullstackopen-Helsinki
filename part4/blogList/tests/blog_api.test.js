@@ -38,6 +38,10 @@ beforeEach(async () => {
 });
 
 
+afterAll(async () => {
+  await mongoose.connection.close()
+})
+
 // TESTS //
 
 
@@ -48,9 +52,6 @@ test('blogs are returned as json', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
-afterAll(async () => {
-  await mongoose.connection.close()
-})
 
 
 test('all blogs are returned', async () => {

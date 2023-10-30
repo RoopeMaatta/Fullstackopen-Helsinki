@@ -13,7 +13,7 @@ Content-Type: application/json
 {
     "username": "Lö_Admin_wuf",
     "name": "HurbWuffel",
-    "password": "salasanaSalasana"
+    "password": "f5"
     
 }
 
