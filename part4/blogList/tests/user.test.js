@@ -107,7 +107,7 @@ describe('when there is initially one user in db', () => {
 
   test('creation fails with proper statuscode and message if username is not provided', async () => {
     const newUser = {
-      // username: 'roger', // Username missing
+      // Username missing
       name: 'Superuser',
       password: 'salasana',
     }
@@ -125,7 +125,7 @@ describe('when there is initially one user in db', () => {
     const newUser = {
       username: 'roger',
       name: 'Superuser',
-      // password: 'salasana', // Username missing
+      // password missing
     }
 
     const result = await api

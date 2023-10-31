@@ -11,10 +11,10 @@ POST {{baseUrl}}/api/blogs
 Content-Type: application/json
 
 {
-    "title": "MahBlogzzzz",
-    "author": "Bakawuf",
-    "url": "www.letMeGo.com/621",
-    "likes": 3
+    "title": "second wind",
+    "author": "le Hurben",
+    "url": "www.letMeGo.com/621sss",
+    "likes": 98
 }
 
 ###

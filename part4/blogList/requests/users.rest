@@ -11,9 +11,9 @@ POST {{baseUrl}}/api/users
 Content-Type: application/json
 
 {
-    "username": "Lö_Admin_wuf",
-    "name": "HurbWuffel",
-    "password": "f5"
+    "username": "Bakawuf",
+    "name": "LeWriter",
+    "password": "f5dsf"
     
 }
 
