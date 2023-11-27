@@ -3,19 +3,24 @@
 @baseUrl = https://roopemaatta-humble-sniffle-7g7pqv564pwhrpp-3003.app.github.dev
 
 
-# Get all blogs
-GET {{baseUrl}}/api/users
-
-###
-
-#Post blog to server (remember empty line between header and request body)
-POST {{baseUrl}}/api/users
+POST {{baseUrl}}/api/login
 Content-Type: application/json
 
 {
     "username": "Bakawuf",
-    "name": "LeWriter",
     "password": "f5dsf"
+    
+}
+
+###
+
+
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+    "username": "ErrorBakawuf",
+    "password": "WrongPotato"
     
 }
 

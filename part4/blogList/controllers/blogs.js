@@ -3,6 +3,18 @@ const { request, response } = require("../app");
 const Blog = require ("../models/blog")
 const User = require('../models/user')
 
+const jwt = require('jsonwebtoken')
+
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '')
+  }
+  return null
+}
+
+
+
 blogsRouter.get('/', async (request, response, next) => {
   try {
     const blogs = await Blog
@@ -17,13 +29,13 @@ blogsRouter.get('/', async (request, response, next) => {
 blogsRouter.post('/', async (request, response, next) => {
   const { userId, title, author, url, likes } = request.body;
 
-  // // Fetch the user and handle if not found
-  // const user = await User.findById(userId);
-  // if (!user) return response.status(404).json({ error: 'User not found' });
 
-  // Fetch the first user
-  const user = await User.findOne();  // Get the first user found
-  if (!user) return response.status(404).json({ error: 'No users available' });
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+  const user = await User.findById(decodedToken.id)
+
 
   // Create the blog with a reference to the user's ID
   const blog = new Blog({

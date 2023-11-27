@@ -1,5 +1,6 @@
-@baseUrl = http://localhost:3003
+#@baseUrl = http://localhost:3003
 #@baseUrl = https://phonebook-helsinkifullstack3-1x.onrender.com
+@baseUrl = https://roopemaatta-humble-sniffle-7g7pqv564pwhrpp-3003.app.github.dev
 
 # Get all blogs
 GET {{baseUrl}}/api/blogs
@@ -9,6 +10,7 @@ GET {{baseUrl}}/api/blogs
 #Post blog to server (remember empty line between header and request body)
 POST {{baseUrl}}/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ
 
 {
     "title": "second wind",
