@@ -4,7 +4,7 @@ const Blog = require ("../models/blog")
 const User = require('../models/user')
 
 // const middleware = require('../utils/middleware')
-const { tokenVerifier } = require('../utils/middleware')
+const { userExtractor } = require('../utils/middleware')
 
 const jwt = require('jsonwebtoken')
 
@@ -21,10 +21,10 @@ blogsRouter.get('/', async (request, response, next) => {
 })
 
 
-blogsRouter.post('/', tokenVerifier, async (request, response, next) => {
+blogsRouter.post('/', userExtractor, async (request, response, next) => {
   const { title, author, url, likes } = request.body;
 
-  const userId = request.user.id; // or whatever property you've set in tokenVerifier
+  const userId = request.user.id; // or whatever property you've set in userExtractor
 
   try {
     const user = await User.findById(userId);
@@ -58,7 +58,7 @@ blogsRouter.post('/', tokenVerifier, async (request, response, next) => {
 
 
 
-blogsRouter.delete('/:id', tokenVerifier, async (request, response, next) => {
+blogsRouter.delete('/:id', userExtractor, async (request, response, next) => {
 
   try {
     const id = request.params.id

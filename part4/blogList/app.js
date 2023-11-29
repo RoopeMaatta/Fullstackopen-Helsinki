@@ -31,7 +31,7 @@ app.use(express.static('build'))
 app.use(express.json())
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
-// app.use(middleware.tokenVerifier)
+// app.use(middleware.userExtractor)
 
 
 app.use('/api/blogs', blogRouter)

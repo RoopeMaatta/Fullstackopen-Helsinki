@@ -38,7 +38,7 @@ const tokenExtractor = (request, response, next) => {
   next()
 }
 
-const tokenVerifier = (request, response, next) => {
+const userExtractor = (request, response, next) => {
   try {
     const decodedToken = jwt.verify(request.token, process.env.SECRET);
     if (!decodedToken.id) {
@@ -58,5 +58,5 @@ module.exports = {
   unknownEndpoint,
   errorHandler,
   tokenExtractor,
-  tokenVerifier,
+  userExtractor,
 }
