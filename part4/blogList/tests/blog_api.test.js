@@ -3,6 +3,8 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const jwt = require('jsonwebtoken');
 
 // Initial testing database setup //
 
@@ -22,6 +24,7 @@ const initialBlogs = [
 ]
 
 
+
 // Store the saved blog instances in this array
 let savedBlogs = [];
 
@@ -38,11 +41,51 @@ beforeEach(async () => {
 });
 
 
+
+// Add a mock user object
+const mockUser = {
+  username: 'testUser',
+  name: 'Test User',
+  passwordHash: 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', // Dummy hash "password123" using SHA-256:
+  // Add any other fields if required
+};
+
+// Store the saved user instance globally
+let savedUser;
+
+let token;
+
+beforeEach(async () => {
+
+  await Blog.deleteMany({});
+  await User.deleteMany({}); // Clear the User collection
+
+  // Create and save the mock user
+  const userObject = new User(mockUser);
+  savedUser = await userObject.save();
+
+  // Reset and fill the blogs collection
+  savedBlogs = [];
+  for (let blog of initialBlogs) {
+    // Add the user reference to each blog
+    const blogObject = new Blog({ ...blog, user: savedUser._id });
+    const savedBlog = await blogObject.save();
+    savedBlogs.push(savedBlog);
+  }
+
+  token = jwt.sign(
+    { id: savedUser._id.toString() },
+    process.env.SECRET,
+    { expiresIn: '0.1h' }
+  );
+
+});
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
 
-// TESTS //
+// ---------------------------- TESTS  ---------------------------- //
 
 
 test('blogs are returned as json', async () => {
@@ -51,7 +94,6 @@ test('blogs are returned as json', async () => {
     .expect(200)
     .expect('Content-Type', /application\/json/)
 })
-
 
 
 test('all blogs are returned', async () => {
@@ -80,7 +122,9 @@ test('all blogs have "id" property', async () => {
 
 })
 
+
 test("a valid new blog can be added", async () => {
+
   const newBlog = {
     title: "how to bork during a new dawn",
     author: "Le Kitsumon",
@@ -90,6 +134,7 @@ test("a valid new blog can be added", async () => {
 
   await api
     .post("/api/blogs")
+    .set('Authorization', `Bearer ${token}`)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -103,7 +148,9 @@ test("a valid new blog can be added", async () => {
 })
 
 
+
 test("if 'likes'-property is missing and it will be set to 0", async () => {
+
   const newBlog = {
     title: "How to miss liking bones",
     author: "el Doggo",
@@ -113,6 +160,7 @@ test("if 'likes'-property is missing and it will be set to 0", async () => {
 
   await api
     .post("/api/blogs")
+    .set('Authorization', `Bearer ${token}`)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -129,6 +177,7 @@ test("if 'likes'-property is missing and it will be set to 0", async () => {
 
 
 test("if creating blog with missing 'title' responds with status 400 Bad Request", async () => {
+
   const newBlogWithoutTitle = {
     // title is missing
     author: "el Doggo",
@@ -138,6 +187,7 @@ test("if creating blog with missing 'title' responds with status 400 Bad Request
 
   await api
     .post("/api/blogs")
+    .set('Authorization', `Bearer ${token}`)
     .send(newBlogWithoutTitle)
     .expect(400)
     .expect('Content-Type', /application\/json/)
@@ -145,6 +195,7 @@ test("if creating blog with missing 'title' responds with status 400 Bad Request
 
 
 test("if creating blog with missing 'url' responds with status 400 Bad Request", async () => {
+
   const newBlogWithoutUrl = {
     title: "This is the story of my liver",
     author: "el Doggo",
@@ -154,6 +205,7 @@ test("if creating blog with missing 'url' responds with status 400 Bad Request",
 
   await api
     .post("/api/blogs")
+    .set('Authorization', `Bearer ${token}`)
     .send(newBlogWithoutUrl)
     .expect(400)
     .expect('Content-Type', /application\/json/)
@@ -165,6 +217,7 @@ test("deleting a blog", async () => {
 
   await api
     .delete(`/api/blogs/${blogToBeDeleted.id}`)
+    .set('Authorization', `Bearer ${token}`)
     .expect(204)
 
   // Additional assertion to ensure it's actually deleted

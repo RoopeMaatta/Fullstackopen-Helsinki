@@ -21,3 +21,8 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ
 
 ###
 
+#Delete blog from server (change id to a blog that is in the database)
+DELETE  {{baseUrl}}/api/blogs/65411f0bb16b7c6adbc0f799
+Authorization: bearer 65411f23b16b7c6adbc0f79f
+
+

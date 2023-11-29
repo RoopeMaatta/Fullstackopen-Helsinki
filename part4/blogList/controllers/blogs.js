@@ -3,6 +3,9 @@ const { request, response } = require("../app");
 const Blog = require ("../models/blog")
 const User = require('../models/user')
 
+// const middleware = require('../utils/middleware')
+const { tokenVerifier } = require('../utils/middleware')
+
 const jwt = require('jsonwebtoken')
 
 
@@ -18,27 +21,26 @@ blogsRouter.get('/', async (request, response, next) => {
 })
 
 
-blogsRouter.post('/', async (request, response, next) => {
-  const { userId, title, author, url, likes } = request.body;
+blogsRouter.post('/', tokenVerifier, async (request, response, next) => {
+  const { title, author, url, likes } = request.body;
 
-
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-  const user = await User.findById(decodedToken.id)
-
-
-  // Create the blog with a reference to the user's ID
-  const blog = new Blog({
-    title,
-    author,
-    url,
-    likes: likes || 0,
-    user: user._id
-  });
+  const userId = request.user.id; // or whatever property you've set in tokenVerifier
 
   try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return response.status(404).json({ error: 'user not found' });
+    }
+
+    // Create the blog with a reference to the user's ID
+    const blog = new Blog({
+      title,
+      author,
+      url,
+      likes: likes || 0,
+      user: user._id
+    });
+
     const savedBlog = await blog.save();
 
     // Update the user's `blogs` array with the new blog's ID
@@ -56,7 +58,8 @@ blogsRouter.post('/', async (request, response, next) => {
 
 
 
-blogsRouter.delete('/:id', async (request, response, next) => {
+blogsRouter.delete('/:id', tokenVerifier, async (request, response, next) => {
+
   try {
     const id = request.params.id
     await Blog.findByIdAndDelete(id)
