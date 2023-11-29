@@ -253,3 +253,28 @@ test("updating a blog", async () => {
   expect(updatedBlog.likes).toEqual(updatedData.likes);
 
 })
+
+test("should respond with 401 Unauthorized for blog addition without token", async () => {
+
+
+  const newBlog = {
+    title: "how to bork during a new dawn",
+    author: "Le Kitsumon",
+    url: "www.newblog.us",
+    likes: 5,
+  }
+
+  // Store the response in a variable
+  const response = await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(401)
+    .expect('Content-Type', /json/)
+
+
+  expect(response.body.error).toContain('Invalid token');
+
+
+  // expect(response.body).toHaveProperty('error');
+
+})
