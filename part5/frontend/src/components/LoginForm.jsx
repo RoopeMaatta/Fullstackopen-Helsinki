@@ -5,8 +5,8 @@ const LoginForm = ({ onLogin }) => {
 
 const [username, setUsername] = useState('') 
 const [password, setPassword] = useState('') 
-const [user, setUser] = useState(null)
 const [errorMessage, setErrorMessage] = useState(null)
+
 
 const handleLogin = async (event) => {
   event.preventDefault()
@@ -15,6 +15,9 @@ const handleLogin = async (event) => {
     const user = await loginService.login({
       username, password,
     })
+    window.localStorage.setItem(
+      'loggedAppUser', JSON.stringify(user)
+    ) 
     onLogin(user)
     setUser(user)
     setUsername('')
