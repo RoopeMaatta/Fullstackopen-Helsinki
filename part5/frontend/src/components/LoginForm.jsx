@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import loginService from '../services/login'
 
-const LoginForm = () => {
+const LoginForm = ({ onLogin }) => {
 
 const [username, setUsername] = useState('') 
 const [password, setPassword] = useState('') 
@@ -15,6 +15,7 @@ const handleLogin = async (event) => {
     const user = await loginService.login({
       username, password,
     })
+    onLogin(user)
     setUser(user)
     setUsername('')
     setPassword('')
