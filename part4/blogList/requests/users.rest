@@ -13,8 +13,8 @@ POST {{baseUrl}}/api/users
 Content-Type: application/json
 
 {
-    "username": "Bakawuf",
-    "name": "LeWriter",
+    "username": "Wufle Author",
+    "name": "LeWriter2",
     "password": "f5dsf"
     
 }

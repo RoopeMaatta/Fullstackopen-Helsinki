@@ -1,4 +1,5 @@
-const baseUrl = '/api/blogs';
+// const baseUrl = '/api/blogs';
+const baseUrl = 'https://roopemaatta-humble-sniffle-7g7pqv564pwhrpp-3003.app.github.dev/api/blogs'
 
 const getAll = async () => {
   const response = await fetch(baseUrl);
