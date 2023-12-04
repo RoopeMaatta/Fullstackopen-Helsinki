@@ -1,24 +1,31 @@
 // const baseUrl = '/api/blogs';
+
+import axios from 'axios'
 const baseUrl = 'https://roopemaatta-humble-sniffle-7g7pqv564pwhrpp-3003.app.github.dev/api/blogs'
 
+let token = null
+const setToken = newToken => {
+  token = `Bearer ${newToken}`
+}
+
+// get all blogs
 const getAll = async () => {
-  const response = await fetch(baseUrl);
-  if (!response.ok) {
-    throw new Error('Network response was not ok ' + response.statusText);
+  try {
+    const response = await axios.get(baseUrl);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error fetching data: ${error.message}`);
   }
-  return await response.json();
 };
 
-export default { getAll };
+// create a new blog 
+const create = async newObject => {
+  const config = {
+    headers: { Authorization: token },
+  }
+  const response = await axios.post(baseUrl, newObject, config)
+  return response.data
+}
 
 
-
-// import axios from 'axios'
-// const baseUrl = '/api/blogs'
-
-// const getAll = () => {
-//   const request = axios.get(baseUrl)
-//   return request.then(response => response.data)
-// }
-
-// export default { getAll }
+export default { getAll, create, setToken };

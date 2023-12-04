@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import loginService from '../services/login'
+import InputField from './InputField'
 
 const LoginForm = ({ onLogin }) => {
 
@@ -38,24 +39,22 @@ const handleLogin = async (event) => {
     {errorMessage}
     </div>
     
-    <div>
-      username 
-        <input
+    <InputField
+        label="username"
         type="text"
         value={username}
         name="Username"
         onChange={({ target }) => setUsername(target.value)}
       />
-    </div>
-    <div>
-      password 
-        <input
+
+      <InputField
+        label="password"
         type="password"
         value={password}
         name="Password"
         onChange={({ target }) => setPassword(target.value)}
       />
-    </div>
+
     <button type="submit">login</button>
   </form>
   )
