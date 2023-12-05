@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import loginService from '../services/login'
 import InputField from './InputField'
+import { useUserAuthenticationContext } from '../hooks/useUserAuthentication'
 
 const LoginForm = ({ onLogin }) => {
 
@@ -8,8 +9,9 @@ const [username, setUsername] = useState('')
 const [password, setPassword] = useState('') 
 const [errorMessage, setErrorMessage] = useState(null)
 
+const { handleLogin } = useUserAuthenticationContext();
 
-const handleLogin = async (event) => {
+const handleSubmit = async (event) => {
   event.preventDefault()
   
   try {
@@ -19,7 +21,7 @@ const handleLogin = async (event) => {
     window.localStorage.setItem(
       'loggedAppUser', JSON.stringify(user)
     ) 
-    onLogin(user)
+    handleLogin(user); 
     setUser(user)
     setUsername('')
     setPassword('')
@@ -34,7 +36,7 @@ const handleLogin = async (event) => {
 
   return (
     
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleSubmit}>
     <div>
     {errorMessage}
     </div>

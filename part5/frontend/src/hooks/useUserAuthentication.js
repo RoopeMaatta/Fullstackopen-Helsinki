@@ -23,7 +23,7 @@ export const useUserAuthentication = () => {
     setUser(null);
   };
 
-  return { user, handleLogin, handleLogout };
+  return { user, setUser, handleLogin, handleLogout };
 };
 
 export const useUserAuthenticationContext = () => useContext(UserAuthenticationContext);

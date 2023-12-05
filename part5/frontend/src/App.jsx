@@ -9,12 +9,12 @@ const App = () => {
   const { user, handleLogin, handleLogout } = useUserAuthentication();
 
   return (
-    <UserAuthenticationContext.Provider value={{ user }}>
+    <UserAuthenticationContext.Provider value={{ user, handleLogin, handleLogout }}>
       <div>
         <h2>blogs</h2>
 
         {user === null && (
-          <LoginForm onLogin={handleLogin} />
+          <LoginForm  />
         )}
         
         {user !== null && (
