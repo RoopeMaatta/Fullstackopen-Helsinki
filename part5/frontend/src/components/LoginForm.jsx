@@ -1,28 +1,20 @@
 import { useState } from 'react'
-import loginService from '../services/login'
 import InputField from './InputField'
-import { useUserAuthenticationContext } from '../hooks/useUserAuthentication'
+import { useAuthenticationContext } from '../hooks/useAuthentication'
 
-const LoginForm = ({ onLogin }) => {
+const LoginForm = ( ) => {
+const { handleLogin } = useAuthenticationContext();
 
 const [username, setUsername] = useState('') 
 const [password, setPassword] = useState('') 
 const [errorMessage, setErrorMessage] = useState(null)
 
-const { handleLogin } = useUserAuthenticationContext();
+
 
 const handleSubmit = async (event) => {
   event.preventDefault()
-  
   try {
-    const user = await loginService.login({
-      username, password,
-    })
-    window.localStorage.setItem(
-      'loggedAppUser', JSON.stringify(user)
-    ) 
-    handleLogin(user); 
-    setUser(user)
+    await handleLogin(username, password); 
     setUsername('')
     setPassword('')
   } catch (exception) {
@@ -32,7 +24,6 @@ const handleSubmit = async (event) => {
     }, 5000)
   }
 }
-
 
   return (
     

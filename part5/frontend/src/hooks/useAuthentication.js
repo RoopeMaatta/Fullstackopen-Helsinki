@@ -1,8 +1,9 @@
 import { useState, useEffect, createContext, useContext } from 'react';
+import loginService from '../services/login'
 
 export const UserAuthenticationContext = createContext(null);
 
-export const useUserAuthentication = () => {
+export const useAuthenticationState = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -13,9 +14,15 @@ export const useUserAuthentication = () => {
     }
   }, []);
 
-  const handleLogin = (user) => {
-    window.localStorage.setItem('loggedAppUser', JSON.stringify(user));
-    setUser(user);
+  const handleLogin = async (username, password) => {
+    try {
+      const user = await loginService.login({ username, password });
+      window.localStorage.setItem('loggedAppUser', JSON.stringify(user));
+      setUser(user);
+    } catch (exception) {
+      // Handle login error here if needed, or rethrow the exception
+      throw exception;
+    }
   };
 
   const handleLogout = () => {
@@ -26,4 +33,4 @@ export const useUserAuthentication = () => {
   return { user, setUser, handleLogin, handleLogout };
 };
 
-export const useUserAuthenticationContext = () => useContext(UserAuthenticationContext);
+export const useAuthenticationContext = () => useContext(UserAuthenticationContext);
