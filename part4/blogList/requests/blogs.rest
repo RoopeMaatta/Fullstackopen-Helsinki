@@ -10,13 +10,13 @@ GET {{baseUrl}}/api/blogs
 #Post blog to server (remember empty line between header and request body)
 POST {{baseUrl}}/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkJha2F3dWYiLCJpZCI6IjY1NDExZjAxYjE2YjdjNmFkYmMwZjc5NCIsImlhdCI6MTcwMTI2MzU4MSwiZXhwIjoxNzAxMjY3MTgxfQ.VOx3Dsk-qdC4drl_B5aBJAy-nwb4Bu9e_4HA4nyJ2qk
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ild1ZmxlIEF1dGhvciIsImlkIjoiNjU2NzM3ZTY1NjFmMTM3OWQwYmJmYjQzIiwiaWF0IjoxNzAxOTQwMjY1LCJleHAiOjE3MDE5NDM4NjV9.EHbzUyelahiKsawrfTwzLoNRDYu6ToE4huEJF3U-l6Y
 
 {
-    "title": "A book of more",
-    "author": "le Hurben",
-    "url": "www.letMeGo.com/621sss",
-    "likes": 32
+    "title": "THIS BOOK IS WUFFLES PRIVATE BOOK",
+    "author": "LeWriter2",
+    "url": "www.PRIVATE.com/Hiss",
+    "likes": 4
 }
 
 ###

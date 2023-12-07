@@ -4,14 +4,27 @@ import axios from 'axios'
 const baseUrl = 'https://roopemaatta-humble-sniffle-7g7pqv564pwhrpp-3003.app.github.dev/api/blogs'
 
 let token = null
+
 const setToken = newToken => {
   token = `Bearer ${newToken}`
 }
 
-// get all blogs
+// // get all blogs
+// const getAll = async () => {
+//   try {
+//     const response = await axios.get(baseUrl);
+//     return response.data;
+//   } catch (error) {
+//     throw new Error(`Error fetching data: ${error.message}`);
+//   }
+// };
+
 const getAll = async () => {
+  const config = {
+    headers: { Authorization: token },
+  };
   try {
-    const response = await axios.get(baseUrl);
+    const response = await axios.get(baseUrl, config);
     return response.data;
   } catch (error) {
     throw new Error(`Error fetching data: ${error.message}`);

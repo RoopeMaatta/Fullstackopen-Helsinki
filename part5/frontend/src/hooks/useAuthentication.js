@@ -1,5 +1,7 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import loginService from '../services/login'
+import blogServices from '../services/blogs'
+const { setToken } = blogServices
 
 export const UserAuthenticationContext = createContext(null);
 
@@ -19,6 +21,7 @@ export const useAuthenticationState = () => {
       const user = await loginService.login({ username, password });
       window.localStorage.setItem('loggedAppUser', JSON.stringify(user));
       setUser(user);
+      setToken(user.token)
     } catch (exception) {
       // Handle login error here if needed, or rethrow the exception
       throw exception;
@@ -30,7 +33,7 @@ export const useAuthenticationState = () => {
     setUser(null);
   };
 
-  return { user, setUser, handleLogin, handleLogout };
+  return { user, handleLogin, handleLogout };
 };
 
 export const useAuthenticationContext = () => useContext(UserAuthenticationContext);
