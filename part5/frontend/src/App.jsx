@@ -2,18 +2,21 @@ import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import { useAuthenticationState, UserAuthenticationContext } from './hooks/useAuthentication';
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 
 const App = () => {
   const { user, handleLogin, handleLogout } = useAuthenticationState();
-
+  
+  const [blogUpdate, setBlogUpdate] = useState(false)
 
   const contextValue = useMemo(() => ({
     user, 
     handleLogin, 
-    handleLogout
-  }), [user, handleLogin, handleLogout]);
+    handleLogout,
+    blogUpdate,
+    setBlogUpdate
+  }), [user, handleLogin, handleLogout, blogUpdate]);
 
 
   return (

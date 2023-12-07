@@ -9,16 +9,6 @@ const setToken = newToken => {
   token = `Bearer ${newToken}`
 }
 
-// // get all blogs
-// const getAll = async () => {
-//   try {
-//     const response = await axios.get(baseUrl);
-//     return response.data;
-//   } catch (error) {
-//     throw new Error(`Error fetching data: ${error.message}`);
-//   }
-// };
-
 const getAll = async () => {
   const config = {
     headers: { Authorization: token },

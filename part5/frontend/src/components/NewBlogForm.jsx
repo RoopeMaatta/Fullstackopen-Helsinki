@@ -1,9 +1,8 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import InputField from './InputField'
-
-// import blogService from '../services/blogs'
-
-// Heading, title, author, url, createButton
+import blogServices from '../services/blogs'
+const { create } = blogServices
+import { UserAuthenticationContext } from '../hooks/useAuthentication';
 
 const NewBlogForm = () => {
   
@@ -12,32 +11,26 @@ const NewBlogForm = () => {
   const [url, setUrl] = useState('') 
   const [errorMessage, setErrorMessage] = useState(null)
   
+  const { setBlogUpdate } = useContext(UserAuthenticationContext); // Get setBlogUpdate from context
   
-  const handleLogin = async (event) => {
+  const handleSubmitNewBlog = async (event) => {
     event.preventDefault()
-    
-    // try {
-    //   const user = await loginService.login({
-    //     title, author,
-    //   })
-    //   window.localStorage.setItem(
-    //     'loggedAppUser', JSON.stringify(user)
-    //     ) 
-    //     onLogin(user)
-    //     setUser(user)
-    //     setTitle('')
-    //     setAuthor('')
-    //     setUrl('')
-    //   } catch (exception) {
-    //     setErrorMessage('Wrong credentials')
-    //     setTimeout(() => {
-    //       setErrorMessage(null)
-    //     }, 5000)
-    //   }
+    try {
+      await create({title, author, url})
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      setBlogUpdate(prev => !prev)
+      } catch (exception) {
+        setErrorMessage('Something went wrong with creating new blog')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      }
     }
     return (
       
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleSubmitNewBlog}>
       <div>
       {errorMessage}
       </div>

@@ -12,7 +12,8 @@ export const useAuthenticationState = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedAppUser');
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
+      setUser(user)
+      setToken(user.token)
     }
   }, []);
 
