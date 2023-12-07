@@ -9,31 +9,25 @@ const NewBlogForm = () => {
   const [title, setTitle] = useState('') 
   const [author, setAuthor] = useState('') 
   const [url, setUrl] = useState('') 
-  const [errorMessage, setErrorMessage] = useState(null)
   
-  const { setBlogUpdate } = useContext(UserAuthenticationContext); // Get setBlogUpdate from context
+  const { setBlogUpdate, showNotification } = useContext(UserAuthenticationContext); // Get setBlogUpdate from context
   
   const handleSubmitNewBlog = async (event) => {
     event.preventDefault()
     try {
       await create({title, author, url})
+      showNotification('New blog added successfully');
       setTitle('')
       setAuthor('')
       setUrl('')
       setBlogUpdate(prev => !prev)
       } catch (exception) {
-        setErrorMessage('Something went wrong with creating new blog')
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
+          showNotification('Something went wrong with creating new blog', 'error');
       }
     }
     return (
       
       <form onSubmit={handleSubmitNewBlog}>
-      <div>
-      {errorMessage}
-      </div>
       
       <InputField
       label="title"

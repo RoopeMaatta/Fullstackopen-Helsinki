@@ -3,35 +3,28 @@ import InputField from './InputField'
 import { useAuthenticationContext } from '../hooks/useAuthentication'
 
 const LoginForm = ( ) => {
-const { handleLogin } = useAuthenticationContext();
+const { handleLogin, showNotification } = useAuthenticationContext();
 
 const [username, setUsername] = useState('') 
 const [password, setPassword] = useState('') 
-const [errorMessage, setErrorMessage] = useState(null)
-
 
 
 const handleSubmit = async (event) => {
   event.preventDefault()
   try {
-    await handleLogin(username, password); 
+    await handleLogin(username, password);
+    showNotification('Logged in successfully'); 
     setUsername('')
     setPassword('')
   } catch (exception) {
-    setErrorMessage('Wrong credentials')
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 5000)
+    showNotification('Wrong Usernmae or password', 'error');
   }
 }
 
   return (
     
     <form onSubmit={handleSubmit}>
-    <div>
-    {errorMessage}
-    </div>
-    
+   
     <InputField
         label="username"
         type="text"
