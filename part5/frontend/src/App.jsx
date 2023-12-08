@@ -50,7 +50,7 @@ const App = () => {
             <NewBlogForm /> {/* context: setBlogUpdate, showNotification */}
             <br />
 
-            <BlogList />
+            <BlogList /> {/* context: user, blogUpdate */}
           </>
         )}
 
