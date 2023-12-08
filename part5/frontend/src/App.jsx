@@ -2,6 +2,7 @@ import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import { useAuthenticationState, UserAuthenticationContext } from './hooks/useAuthentication'
 import { useMemo, useState } from 'react'
 
@@ -36,7 +37,7 @@ const App = () => {
         <Notification message={notification.message} type={notification.type} />
 
         {user === null && (
-          <LoginForm  />
+          <LoginForm  /> // context: handleLogin, showNotifivation
         )}
 
         {user !== null && (
@@ -46,8 +47,9 @@ const App = () => {
               <button onClick={handleLogout}>Logout</button>
             </div>
             <br />
-
-            <NewBlogForm />
+            <Togglable buttonLabel="Create new blog">
+              <NewBlogForm />
+            </Togglable>
             <br />
 
             <BlogList />
