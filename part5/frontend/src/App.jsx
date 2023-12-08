@@ -2,7 +2,6 @@ import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
-import Togglable from './components/Togglable'
 import { useAuthenticationState, UserAuthenticationContext } from './hooks/useAuthentication'
 import { useMemo, useState } from 'react'
 
@@ -47,9 +46,8 @@ const App = () => {
               <button onClick={handleLogout}>Logout</button>
             </div>
             <br />
-            <Togglable buttonLabel="Create new blog">
-              <NewBlogForm />
-            </Togglable>
+
+            <NewBlogForm /> {/* context: setBlogUpdate, showNotification */}
             <br />
 
             <BlogList />
