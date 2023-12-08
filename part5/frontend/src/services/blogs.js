@@ -12,16 +12,16 @@ const setToken = newToken => {
 const getAll = async () => {
   const config = {
     headers: { Authorization: token },
-  };
-  try {
-    const response = await axios.get(baseUrl, config);
-    return response.data;
-  } catch (error) {
-    throw new Error(`Error fetching data: ${error.message}`);
   }
-};
+  try {
+    const response = await axios.get(baseUrl, config)
+    return response.data
+  } catch (error) {
+    throw new Error(`Error fetching data: ${error.message}`)
+  }
+}
 
-// create a new blog 
+// create a new blog
 const create = async newObject => {
   const config = {
     headers: { Authorization: token },
@@ -31,4 +31,4 @@ const create = async newObject => {
 }
 
 
-export default { getAll, create, setToken };
+export default { getAll, create, setToken }
