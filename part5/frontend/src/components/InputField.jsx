@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 
 const InputField = ({ label, type, value, name, onChange }) => {
   return (
@@ -12,5 +13,14 @@ const InputField = ({ label, type, value, name, onChange }) => {
     </div>
   )
 }
+
+InputField.propTypes = {
+  label: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+}
+
 
 export default InputField
