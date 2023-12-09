@@ -31,6 +31,22 @@ const BlogList = () => {
     }
   }
 
+  const handleDelete = async (blog) => {
+    if (window.confirm(`Are you shure you want to delete blog: ${blog.title}`)){
+      try {
+        const deleteBlog = await blogService.remove(blog.id)
+        // Update the state or handle the updated blog data
+        showNotification(`${blog.title} was deleted`)
+        setBlogs(blogs.filter(b => b.id !== blog.id))
+      } catch (exception) {
+        showNotification('Something went wrong with deleting a blog', 'error')
+      // Handle error (e.g., show a notification)
+      }
+    } else {
+      showNotification('Deleting aborted')
+    }
+  }
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -51,6 +67,7 @@ const BlogList = () => {
               <li>Url: {blog.url}</li>
               <li>Likes: {blog.likes} <button onClick={ () => handleLike(blog)}>Like</button></li>
               <li>Author: {blog.author}</li>
+              <button onClick={ () => handleDelete(blog)}>Delete blog</button>
             </ul>
           </Togglable>
         </div>
