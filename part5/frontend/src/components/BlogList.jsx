@@ -5,13 +5,24 @@ import Togglable from './Togglable'
 
 const BlogList = () => {
   const [blogs, setBlogs] = useState([])
-  const { user, blogUpdate } = useContext(UserAuthenticationContext)
+  const { user, blogUpdate, showNotification } = useContext(UserAuthenticationContext)
 
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs(blogs))
   }, [user, blogUpdate])
 
 
+  const handleLike = async (blog) => {
+    try {
+      const updatedBlog = await blogService.update(blog.id, { ...blog, likes: blog.likes + 1 })
+      // Update the state or handle the updated blog data
+      showNotification(`+1 Like to blog: ${updatedBlog.title}`)
+      setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b))
+    } catch (exception) {
+      showNotification('Something went wrong with liking a blog', 'error')
+      // Handle error (e.g., show a notification)
+    }
+  }
 
   const blogStyle = {
     paddingTop: 10,
@@ -31,7 +42,7 @@ const BlogList = () => {
             <ul>
               <li>Title: {blog.title}</li>
               <li>Url: {blog.url}</li>
-              <li>Likes: {blog.likes} <button>Like</button></li>
+              <li>Likes: {blog.likes} <button onClick={ () => handleLike(blog)}>Like</button></li>
               <li>Author: {blog.author}</li>
             </ul>
           </Togglable>

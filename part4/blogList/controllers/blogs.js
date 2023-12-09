@@ -20,15 +20,32 @@ const jwt = require('jsonwebtoken')
 //   }
 // })
 
-// Assuming userExtractor middleware sets request.user
-blogsRouter.get('/', userExtractor, async (request, response, next) => {
+
+// blogsRouter.get('/', userExtractor, async (request, response, next) => {
+//   try {
+//     // Use the user's ID to filter blogs
+//     const userId = request.user.id; // Make sure this matches how userExtractor sets the user
+
+//     const blogs = await Blog
+//       .find({ user: userId }).populate("user", { username: 1, name: 1 });
+
+//     response.json(blogs);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
+blogsRouter.get('/', async (request, response, next) => {
   try {
-    // Use the user's ID to filter blogs
-    const userId = request.user.id; // Make sure this matches how userExtractor sets the user
-
-    const blogs = await Blog
-      .find({ user: userId }).populate("user", { username: 1, name: 1 });
-
+    let blogs;
+    if (request.query.userOnly && request.user) {
+      // Get blogs for logged-in user
+      const userId = request.user.id;
+      blogs = await Blog.find({ user: userId }).populate("user", { username: 1, name: 1 });
+    } else {
+      // Get all blogs
+      blogs = await Blog.find({}).populate("user", { username: 1, name: 1 });
+    }
     response.json(blogs);
   } catch (error) {
     next(error);

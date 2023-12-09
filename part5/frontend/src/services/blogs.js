@@ -15,11 +15,20 @@ const getAll = async () => {
   }
   try {
     const response = await axios.get(baseUrl, config)
-    console.log(response.data)
     return response.data
   } catch (error) {
     throw new Error(`Error fetching data: ${error.message}`)
   }
+}
+
+
+// update a existing blog
+const update = async (id, newObject) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+  const response = await axios.put(`${baseUrl}/${id}`, newObject, config)
+  return response.data
 }
 
 // create a new blog
@@ -32,4 +41,5 @@ const create = async newObject => {
 }
 
 
-export default { getAll, create, setToken }
+
+export default { getAll, create, setToken, update }
