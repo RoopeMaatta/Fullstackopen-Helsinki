@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import blogService from '../services/blogs'
 import { UserAuthenticationContext } from '../hooks/useAuthentication'
-import Togglable from './Togglable'
+import Blog from './Blog'
 
 const BlogList = () => {
   const [blogs, setBlogs] = useState([])
@@ -17,7 +17,6 @@ const BlogList = () => {
         console.error('Error fetching blogs:', error)
       })
   }, [user, blogUpdate])
-
 
   const handleLike = async (blog) => {
     try {
@@ -60,16 +59,17 @@ const BlogList = () => {
     <div>
       {blogs.map(blog => (
         <div key={blog.id} style = {blogStyle}>
-          {blog.title} by {blog.author}
-          <Togglable buttonLabel="Show Details">
-            <ul>
-              <li>Title: {blog.title}</li>
-              <li>Url: {blog.url}</li>
-              <li>Likes: {blog.likes} <button onClick={ () => handleLike(blog)}>Like</button></li>
-              <li>Author: {blog.author}</li>
-              <button onClick={ () => handleDelete(blog)}>Delete blog</button>
-            </ul>
-          </Togglable>
+          <Blog
+            blog = {{
+              title: blog.title,
+              url: blog.url,
+              likes: blog.likes,
+              author: blog.author,
+              id: blog.id
+            }}
+            handleLike={handleLike}
+            handleDelete={handleDelete}
+          />
         </div>
       ))}
     </div>
