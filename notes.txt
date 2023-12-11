@@ -24,8 +24,8 @@ module.exports = {
 
 
 
-
-
+// 
+npm test -- --coverage --collectCoverageFrom='src/**/*.{jsx,js}'
 
 // create-react-app newer way to do:
     npm create vite@latest part1 -- --template react
