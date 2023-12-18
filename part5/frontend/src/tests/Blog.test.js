@@ -42,6 +42,7 @@ describe('<Blog />', () => {
       author: 'Testing Author',
       id: 1,
     }
+
   })
 
   test('renders content with title and author visible and details (title, url, author, likes) hidden', () => {
@@ -72,5 +73,19 @@ describe('<Blog />', () => {
     const togglableContent = container.querySelector('.togglableContent')
     expect(togglableContent).not.toHaveStyle('display: none')
 
+  })
+
+  test('Pressing like button twice calls event handler twice ', async () => {
+    const { container } = render(<Blog blog={blog}
+      handleLike={mockHandleLike}
+      handleDelete={mockHandleDelete}
+    />)
+
+    const user = userEvent.setup()
+    const button = screen.getByText('Like')
+    await user.click(button)
+    await user.click(button)
+
+    expect(mockHandleLike.mock.calls).toHaveLength(2)
   })
 })
