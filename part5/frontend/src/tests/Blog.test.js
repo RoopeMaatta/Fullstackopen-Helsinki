@@ -4,6 +4,7 @@
 import Blog from '../components/Blog'
 import '@testing-library/jest-dom'
 import { render, screen, fireEvent } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 // // Utility function to check if an element or its ancestors have display: none
 // const hasAncestorWithDisplayNone = (element) => {
@@ -56,4 +57,20 @@ describe('<Blog />', () => {
     expect(togglableContent).toHaveStyle('display: none')
   })
 
+
+
+  test('Details are shown when button is pressed', async () => {
+    const { container } = render(<Blog blog={blog}
+      handleLike={mockHandleLike}
+      handleDelete={mockHandleDelete}
+    />)
+
+    const user = userEvent.setup()
+    const button = screen.getByText('Show Details')
+    await user.click(button)
+
+    const togglableContent = container.querySelector('.togglableContent')
+    expect(togglableContent).not.toHaveStyle('display: none')
+
+  })
 })
