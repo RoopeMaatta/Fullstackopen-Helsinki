@@ -28,8 +28,6 @@ describe('<Togglable />', () => {
     const content = screen.getAllByText(/Test title, togglable and outside/i)
     expect(content[0]).toBeVisible()
     expect(content[1]).not.toBeVisible()
-
-    screen.debug()
   })
 
   test('at start the children are not displayed', () => {

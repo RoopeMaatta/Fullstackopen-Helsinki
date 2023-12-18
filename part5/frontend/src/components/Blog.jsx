@@ -6,7 +6,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
 
   return (
     <div>
-      {blog.title} by {blog.author}
+      <div>{blog.title} by {blog.author}</div>
       <Togglable buttonLabel="Show Details">
         <ul>
           <li>Title: {blog.title}</li>
