@@ -6,27 +6,6 @@ import '@testing-library/jest-dom'
 import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-// // Utility function to check if an element or its ancestors have display: none
-// const hasAncestorWithDisplayNone = (element) => {
-//   let currentElement = element
-
-//   // Traverse up the DOM tree
-//   while (currentElement) {
-//     const style = window.getComputedStyle(currentElement)
-
-//     // Check if the current element has display: none
-//     if (style.display === 'none') {
-//       return true
-//     }
-
-//     // Move to the parent element
-//     currentElement = currentElement.parentElement
-//   }
-
-//   // No ancestor with display: none found
-//   return false
-// }
-
 
 describe('<Blog />', () => {
 
@@ -42,15 +21,19 @@ describe('<Blog />', () => {
       author: 'Testing Author',
       id: 1,
     }
-
   })
 
-  test('renders content with title and author visible and details (title, url, author, likes) hidden', () => {
+  const setupComponent = () => {
+    const container = render(
+      <Blog blog={blog}
+        handleLike={mockHandleLike}
+        handleDelete={mockHandleDelete} />
+    ).container
+    return { container }
+  }
 
-    const { container } = render(<Blog blog={blog}
-      handleLike={mockHandleLike}
-      handleDelete={mockHandleDelete}
-    />)
+  test('renders content with title and author visible and details (title, url, author, likes) hidden', () => {
+    const { container } = setupComponent()
 
     expect(screen.getByText(`${blog.title} by ${blog.author}`)).toBeVisible()
 
@@ -61,10 +44,7 @@ describe('<Blog />', () => {
 
 
   test('Details are shown when button is pressed', async () => {
-    const { container } = render(<Blog blog={blog}
-      handleLike={mockHandleLike}
-      handleDelete={mockHandleDelete}
-    />)
+    const { container } = setupComponent()
 
     const user = userEvent.setup()
     const button = screen.getByText('Show Details')
@@ -76,10 +56,7 @@ describe('<Blog />', () => {
   })
 
   test('Pressing like button twice calls event handler twice ', async () => {
-    const { container } = render(<Blog blog={blog}
-      handleLike={mockHandleLike}
-      handleDelete={mockHandleDelete}
-    />)
+    const { container } = setupComponent()
 
     const user = userEvent.setup()
     const button = screen.getByText('Like')
@@ -88,4 +65,5 @@ describe('<Blog />', () => {
 
     expect(mockHandleLike.mock.calls).toHaveLength(2)
   })
+
 })

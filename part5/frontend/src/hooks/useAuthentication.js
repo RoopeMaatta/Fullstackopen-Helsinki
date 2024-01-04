@@ -25,19 +25,6 @@ export const useAuthenticationState = () => {
     setToken(user.token)
   }
 
-
-  // const handleLogin = async (username, password) => {
-  //   try {
-  //     const user = await loginService.login({ username, password });
-  //     window.localStorage.setItem('loggedAppUser', JSON.stringify(user));
-  //     setUser(user);
-  //     setToken(user.token);
-  //   } catch (exception) {
-  //     // Handle the error, e.g., set an error state, log the error, etc.
-  //     setError('Login failed. Please try again.');
-  //   }
-  // }
-
   const handleLogout = () => {
     window.localStorage.removeItem('loggedAppUser')
     setUser(null)

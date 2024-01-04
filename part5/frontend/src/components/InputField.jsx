@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 
-const InputField = ({ label, type, value, name, onChange }) => {
+const InputField = ({ label, type, value, name, onChange, placeholder }) => {
   return (
     <div>
       {label}
@@ -9,6 +9,7 @@ const InputField = ({ label, type, value, name, onChange }) => {
         value={value}
         name={name}
         onChange={onChange}
+        placeholder={placeholder}
       />
     </div>
   )
@@ -20,6 +21,7 @@ InputField.propTypes = {
   value: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
+  placeholder: PropTypes.string
 }
 
 

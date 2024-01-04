@@ -35,7 +35,7 @@ const NewBlogForm = () => {
 
   return (
     <Togglable buttonLabel="Create new blog" ref = { newBlogFormRef }>
-      <form onSubmit={handleSubmitNewBlog}>
+      <form className="newBlogFormClassName" onSubmit={handleSubmitNewBlog}>
 
         <InputField
           label="title"
@@ -43,6 +43,7 @@ const NewBlogForm = () => {
           value={title}
           name="Title"
           onChange={({ target }) => setTitle(target.value)}
+          placeholder='Enter title'
         />
 
         <InputField
@@ -51,6 +52,7 @@ const NewBlogForm = () => {
           value={author}
           name="Author"
           onChange={({ target }) => setAuthor(target.value)}
+          placeholder='Enter author'
         />
 
         <InputField
@@ -59,6 +61,7 @@ const NewBlogForm = () => {
           value={url}
           name="Url"
           onChange={({ target }) => setUrl(target.value)}
+          placeholder='Enter url'
         />
 
         <button type="submit">Create new Blog</button>
