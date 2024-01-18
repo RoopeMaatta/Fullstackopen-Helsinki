@@ -32,7 +32,7 @@ const App = () => {
   return (
     <UserAuthenticationContext.Provider value={ contextValue }>
       <div>
-        <h2>blogs</h2>
+        <h2>Blogs</h2>
         <Notification message={notification.message} type={notification.type} />
 
         {user === null && (
