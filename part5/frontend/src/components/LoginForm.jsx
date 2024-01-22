@@ -27,7 +27,8 @@ const LoginForm = ( ) => {
     <form onSubmit={handleSubmit}>
 
       <InputField
-        label="username"
+        label="Username"
+        id='username'
         type="text"
         value={username}
         name="Username"
@@ -36,7 +37,8 @@ const LoginForm = ( ) => {
       />
 
       <InputField
-        label="password"
+        label="Password"
+        id='password'
         type="password"
         value={password}
         name="Password"

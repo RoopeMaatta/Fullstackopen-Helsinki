@@ -4,12 +4,12 @@
 
 
 # Get all blogs
-GET {{baseUrl}}/api/users
+GET {{baseUrl}}/api/testing
 
 ###
 
 #Post blog to server (remember empty line between header and request body)
-POST {{baseUrl}}/api/users
+POST {{baseUrl}}/reset
 Content-Type: application/json
 
 {
