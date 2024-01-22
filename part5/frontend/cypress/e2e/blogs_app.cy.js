@@ -24,7 +24,26 @@ describe('Blog app', function() {
   })
 
   it('Login form is shown', function() {
-    cy.get('#password').should('exist')
     cy.get('#username').should('exist')
+    cy.get('#password').should('exist')
+  })
+
+  describe('Login',function() {
+    it('succeeds with correct credentials', function() {
+      cy.get('#username').type('mluukkai')
+      cy.get('#password').type('salainen')
+      cy.get('#login-button').click()
+
+      cy.contains('Logged in successfully')
+      cy.contains('Matti Luukkainen is logged in')
+    })
+
+    it.only('fails with wrong credentials', function() {
+      cy.get('#username').type('wrongUsername')
+      cy.get('#password').type('wrongPassword')
+      cy.get('#login-button').click()
+
+      cy.contains('Wrong username or password')
+    })
   })
 })

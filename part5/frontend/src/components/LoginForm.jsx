@@ -18,7 +18,7 @@ const LoginForm = ( ) => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      showNotification('Wrong Usernmae or password', 'error')
+      showNotification('Wrong username or password', 'error')
     }
   }
 
@@ -46,7 +46,7 @@ const LoginForm = ( ) => {
         placeholder='password'
       />
 
-      <button type="submit">login</button>
+      <button id="login-button" type="submit">login</button>
     </form>
   )
 }
