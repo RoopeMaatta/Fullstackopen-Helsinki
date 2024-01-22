@@ -40,6 +40,7 @@ const NewBlogForm = () => {
         <InputField
           label="title"
           type="text"
+          id="title"
           value={title}
           name="Title"
           onChange={({ target }) => setTitle(target.value)}
@@ -49,6 +50,7 @@ const NewBlogForm = () => {
         <InputField
           label="author"
           type="text"
+          id="author"
           value={author}
           name="Author"
           onChange={({ target }) => setAuthor(target.value)}
@@ -58,13 +60,14 @@ const NewBlogForm = () => {
         <InputField
           label="url"
           type="text"
+          id="url"
           value={url}
           name="Url"
           onChange={({ target }) => setUrl(target.value)}
           placeholder='Enter url'
         />
 
-        <button type="submit">Create new Blog</button>
+        <button type="submit">Submit new Blog</button>
       </form>
     </Togglable>
   )
