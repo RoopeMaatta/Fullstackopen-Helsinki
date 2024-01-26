@@ -1,22 +1,13 @@
-// Test that frontpage loads
-// describe('Blog app', function() {
-//   it('front page can be opened', function() {
-//     cy.visit('http://localhost:5173')
-//     cy.contains('Blogs')
-//   })
-// })
-
-
 describe('Blog app', function() {
   beforeEach(function() {
-    cy.request('POST', 'http://localhost:3003/api/testing/reset')
+    cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
     const user = {
       name: 'Matti Luukkainen',
       username: 'mluukkai',
       password: 'salainen'
     }
-    cy.request('POST', 'http://localhost:3003/api/users/', user)
-    cy.visit('http://localhost:5173')
+    cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
+    cy.visit('/')
   })
 
 
@@ -65,6 +56,30 @@ describe('Blog app', function() {
       cy.contains('LeTitle')
       cy.contains('LeAuthor')
       cy.contains('www.leUrl.le')
+    })
+  })
+  describe('When logged in and blogs exist', function() {
+    beforeEach(function() {
+      cy.login({ username: 'mluukkai', password: 'salainen' })
+      cy.createBlog({
+        title: 'First blog',
+        author: 'Author before each',
+        url: 'www.urlBeforeEach.wuf',
+        likes: 621
+      })
+      cy.createBlog({
+        title: 'Second blog',
+        author: 'Author before each',
+        url: 'www.urlBeforeEach.wuf',
+        likes: 30
+      })
+    })
+    it.only('A user can like a blog', function() {
+      cy.contains('Second blog').parent().within(() => {
+        cy.contains('Show Details').click()
+        cy.contains('Like').click()
+        cy.contains('Likes: 31')
+      })
     })
   })
 })
