@@ -114,5 +114,16 @@ describe('Blog app', function() {
       })
     })
 
+    it('A user can see delete button for only blogs he created', function() {
+      cy.contains('First blog').parent().within(() => {
+        cy.contains('Show Details').click()
+        cy.contains('Delete blog')
+      })
+      cy.contains('Wuf blog').parent().within(() => {
+        cy.contains('Show Details').click()
+        cy.get('.delete-blog').should('not.exist')
+      })
+    })
+
   })
 })

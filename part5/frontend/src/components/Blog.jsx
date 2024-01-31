@@ -23,7 +23,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
           <li>Url: {blog.url}</li>
           <li>Likes: {blog.likes} <button onClick={ () => handleLike(blog)}>Like</button></li>
           <li>Author: {blog.author}</li>
-          {userCreatedBlog && <button onClick={() => handleDelete(blog)}>Delete blog</button>}
+          {userCreatedBlog && <button className="delete-blog" onClick={() => handleDelete(blog)}>Delete blog</button>}
         </ul>
       </Togglable>
     </div>
