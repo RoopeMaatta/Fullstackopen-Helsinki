@@ -1,12 +1,24 @@
 describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
-    const user = {
-      name: 'Matti Luukkainen',
-      username: 'mluukkai',
-      password: 'salainen'
-    }
-    cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
+
+    const users = [
+      {
+        name: 'Matti Luukkainen',
+        username: 'mluukkai',
+        password: 'salainen'
+      },
+      {
+        name: 'Wuffelishious',
+        username: 'Bakawuf',
+        password: 'f5dsf'
+      }
+    ]
+
+    cy.wrap(users).each(user => {
+      cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
+    })
+
     cy.visit('/')
   })
 
@@ -58,21 +70,33 @@ describe('Blog app', function() {
       cy.contains('www.leUrl.le')
     })
   })
+
   describe('When logged in and blogs exist', function() {
     beforeEach(function() {
+      cy.login({ username: 'Bakawuf', password: 'f5dsf' })
+      cy.createBlog({
+        title: 'Wuf blog',
+        author: 'Wuf Author before each',
+        url: 'www.urlBeforeEachWuf.wuf',
+        likes: 20
+      })
+      cy.contains('Logout').click()
+      cy.contains('login')
       cy.login({ username: 'mluukkai', password: 'salainen' })
       cy.createBlog({
         title: 'First blog',
         author: 'First Author before each',
-        url: 'www.urlBeforeEach.wuf',
+        url: 'www.urlBeforeEach1.wuf',
         likes: 621
       })
       cy.createBlog({
         title: 'Second blog',
         author: 'Second Author before each',
-        url: 'www.urlBeforeEach.wuf',
+        url: 'www.urlBeforeEach2.wuf',
         likes: 30
       })
+
+
     })
     it('A user can like a blog', function() {
       cy.contains('Second blog').parent().within(() => {
@@ -81,7 +105,7 @@ describe('Blog app', function() {
         cy.contains('Likes: 31')
       })
     })
-    it.only('A user can delete a blog he has created', function() {
+    it('A user can delete a blog he has created', function() {
       cy.contains('Second blog').parent().within(() => {
         cy.contains('Show Details').click()
         cy.contains('Delete blog').click()
@@ -89,5 +113,6 @@ describe('Blog app', function() {
         cy.contains('Second blog was deleted')
       })
     })
+
   })
 })
