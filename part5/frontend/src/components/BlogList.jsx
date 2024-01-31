@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useImperativeHandle } from 'react'
 import blogService from '../services/blogs'
 import { UserAuthenticationContext } from '../hooks/useAuthentication'
 import Blog from './Blog'
@@ -12,6 +12,8 @@ const BlogList = () => {
       .then(blogs => {
         const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
         setBlogs(sortedBlogs)
+        //console.log('blogs0.user:', blogs[0].user)
+        //console.log('blogs0.user.id:', blogs[0].user.id)
       })
       .catch(error => {
         console.error('Error fetching blogs:', error)
@@ -65,7 +67,8 @@ const BlogList = () => {
               url: blog.url,
               likes: blog.likes,
               author: blog.author,
-              id: blog.id
+              id: blog.id,
+              authorId: blog.user.id
             }}
             handleLike={handleLike}
             handleDelete={handleDelete}

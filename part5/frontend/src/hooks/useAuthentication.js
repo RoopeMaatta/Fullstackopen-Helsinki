@@ -13,6 +13,7 @@ export const useAuthenticationState = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      //console.log('user:', user)
       setToken(user.token)
     }
   }, [])

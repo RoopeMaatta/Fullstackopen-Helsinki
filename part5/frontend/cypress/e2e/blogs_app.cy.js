@@ -63,22 +63,30 @@ describe('Blog app', function() {
       cy.login({ username: 'mluukkai', password: 'salainen' })
       cy.createBlog({
         title: 'First blog',
-        author: 'Author before each',
+        author: 'First Author before each',
         url: 'www.urlBeforeEach.wuf',
         likes: 621
       })
       cy.createBlog({
         title: 'Second blog',
-        author: 'Author before each',
+        author: 'Second Author before each',
         url: 'www.urlBeforeEach.wuf',
         likes: 30
       })
     })
-    it.only('A user can like a blog', function() {
+    it('A user can like a blog', function() {
       cy.contains('Second blog').parent().within(() => {
         cy.contains('Show Details').click()
         cy.contains('Like').click()
         cy.contains('Likes: 31')
+      })
+    })
+    it.only('A user can delete a blog he has created', function() {
+      cy.contains('Second blog').parent().within(() => {
+        cy.contains('Show Details').click()
+        cy.contains('Delete blog').click()
+        cy.on('window:confirm', () => true)
+        cy.contains('Second blog was deleted')
       })
     })
   })

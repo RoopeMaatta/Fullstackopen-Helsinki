@@ -1,7 +1,15 @@
+import React, { useContext } from 'react'
 import Togglable from './Togglable'
 import PropTypes from 'prop-types'
+import { UserAuthenticationContext } from '../hooks/useAuthentication'
 
 const Blog = ({ blog, handleLike, handleDelete }) => {
+  const { user: currentUser } = useContext(UserAuthenticationContext)
+  //  const userCreatedBlog = blog && blog.user && currentUser && currentUser.id === blog.user.id
+
+  const userCreatedBlog = blog.authorId === currentUser.id
+
+
 
 
   return (
@@ -13,7 +21,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
           <li>Url: {blog.url}</li>
           <li>Likes: {blog.likes} <button onClick={ () => handleLike(blog)}>Like</button></li>
           <li>Author: {blog.author}</li>
-          <button onClick={ () => handleDelete(blog)}>Delete blog</button>
+          {userCreatedBlog && <button onClick={() => handleDelete(blog)}>Delete blog</button>}
         </ul>
       </Togglable>
     </div>
