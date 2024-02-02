@@ -15,7 +15,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
 
 
   return (
-    <div>
+    <div className='blog-item'>
       <div>{blog.title} by {blog.author}</div>
       <Togglable buttonLabel="Show Details">
         <ul>

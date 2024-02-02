@@ -78,7 +78,7 @@ describe('Blog app', function() {
         title: 'Wuf blog',
         author: 'Wuf Author before each',
         url: 'www.urlBeforeEachWuf.wuf',
-        likes: 20
+        likes: 29
       })
       cy.contains('Logout').click()
       cy.contains('login')
@@ -123,6 +123,32 @@ describe('Blog app', function() {
         cy.contains('Show Details').click()
         cy.get('.delete-blog').should('not.exist')
       })
+    })
+
+    it('Blogs are organized by most likes', function() {
+      const getBlogItems = (index) => cy.get('.blog-item').eq(index)
+
+      getBlogItems(0).contains('First blog')
+      getBlogItems(1).contains('Second blog')
+      getBlogItems(2).contains('Wuf blog')
+
+    })
+
+
+    it('Blogs are reorganized by most likes after liking and reloading the page', function() {
+      cy.contains('Wuf blog').parent().within(() => {
+        cy.contains('Show Details').click()
+        cy.contains('Like').click().click().click()
+      })
+
+      cy.reload()
+
+      const getBlogItems = (index) => cy.get('.blog-item').eq(index)
+
+      getBlogItems(0).contains('First blog')
+      getBlogItems(1).contains('Wuf blog')
+      getBlogItems(2).contains('Second blog')
+
     })
 
   })
