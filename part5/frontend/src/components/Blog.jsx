@@ -8,9 +8,9 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
   //  const userCreatedBlog = blog && blog.user && currentUser && currentUser.id === blog.user.id
 
   const userCreatedBlog = blog.authorId === currentUser.id
-  console.log('Blog made by logged in user:', userCreatedBlog)
-  console.log('blog.authorId:', blog.authorId)
-  console.log('currentUser.id:', currentUser.id)
+  //console.log('Blog made by logged in user:', userCreatedBlog)
+  //console.log('blog.authorId:', blog.authorId)
+  //console.log('currentUser.id:', currentUser.id)
 
 
 
