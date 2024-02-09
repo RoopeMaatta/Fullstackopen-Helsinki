@@ -20,10 +20,38 @@ const asObject = (anecdote) => {
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
+  //console.log('state now: ', state)
+  //console.log('action', action)
 
-  return state
+  switch (action.type) {
+  case 'VOTE_FOR': {
+    const { id } = action.payload
+    // Find the anecdote with the given ID
+    const anecdoteToUpdate = state.find(anecdote => anecdote.id === id)
+    // Increment the votes of the found anecdote
+    const updatedAnecdote = {
+      ...anecdoteToUpdate,
+      votes: anecdoteToUpdate.votes + 1
+    }
+    // Return a new state array with the updated anecdote
+    return state.map(anecdote =>
+      anecdote.id === id ? updatedAnecdote : anecdote
+    )
+  }
+  case 'ZERO':
+    return initialState
+  default:
+    return state
+  }
 }
+
+// action
+export const voteFor = (id) => {
+  return {
+    type: 'VOTE_FOR',
+    payload: { id }
+  }
+}
+
 
 export default reducer
