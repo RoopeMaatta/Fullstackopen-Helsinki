@@ -15,21 +15,19 @@ const AnecdoteList = () => {
   })
 
   const vote = (id) => {
-    if (notificationTimeout) {
-      clearTimeout(notificationTimeout)
-    }
-    //console.log('vote', id)
+    // Find the voted anecdote
     const votedAnecdote = anecdotes.find(anecdote => anecdote.id === id)
 
+    // Dispatch the voteFor action
     dispatch(voteFor(id))
-    dispatch(setNotification(`You voted for: ${votedAnecdote.content}`))
+
+    // Dispatch setNotification with message and timeout ID
     const timeoutId = setTimeout(() => {
       dispatch(removeNotification())
     }, 5000)
-
-    // Store the timeout ID in state
-    setNotificationTimeout(timeoutId)
+    dispatch(setNotification({ message: `You voted for: ${votedAnecdote.content}`, timeoutId }))
   }
+
 
 
   return (
