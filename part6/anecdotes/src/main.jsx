@@ -3,7 +3,9 @@ import { configureStore } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux'
 import App from './App'
 
-import anecdoteReducer from './reducers/anecdoteReducer'
+import anecdoteService from './services/anecdotes'
+
+import anecdoteReducer, { setAnecdotes } from './reducers/anecdoteReducer'
 import filterReducer from './reducers/filterReducer'
 import notificationReducer from './reducers/notificationReducer'
 
@@ -14,6 +16,7 @@ const store = configureStore({
     notification: notificationReducer
   }
 })
+
 
 //store.subscribe(() => console.log(store.getState()))
 
