@@ -2,35 +2,40 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   message: '',
-  timeoutId: null
 }
 
 const notificationSlice = createSlice({
   name: 'notification',
   initialState,
   reducers: {
-    setNotification(state, action) {
-      const { message, timeoutId } = action.payload
-      // Clear the existing timeout if it exists
-      if (state.timeoutId) {
-        clearTimeout(state.timeoutId)
-      }
-      // Update state immutably with Immer
-      state.message = message
-      state.timeoutId = timeoutId
+    setNotificationState(state, action) {
+      state.message = action.payload.message
     },
     removeNotification(state) {
-      // Clear the existing timeout and reset message and timeoutId
-      if (state.timeoutId) {
-        clearTimeout(state.timeoutId)
-      }
       state.message = ''
-      state.timeoutId = null
-    }
-  }
+    },
+  },
 })
 
+export const { setNotificationState, removeNotification } = notificationSlice.actions
 
 
-export const { setNotification, removeNotification } = notificationSlice.actions
+let notificationTimeoutId = null
+
+export const setNotification = (message, durationInSeconds) => {
+  if (notificationTimeoutId) {
+    clearTimeout(notificationTimeoutId)
+  }
+  return (dispatch) => {
+    // Set the notification message
+    dispatch(setNotificationState({ message }))
+
+    // Schedule the notification removal after the specified duration
+    notificationTimeoutId = setTimeout(() => {
+      dispatch(removeNotification())
+    }, durationInSeconds * 1000)
+    console.log(notificationTimeoutId)
+  }
+}
+
 export default notificationSlice.reducer
