@@ -14,11 +14,18 @@ const createNew = async (content) => {
   return response.data
 }
 
-const updateVoteDb = async (id, object) => {
-  const updatedObject = { ...object, votes: object.votes +1 }
-  const response = await axios.put(`${baseUrl}/${id}`, updatedObject)
-  return response.data
+const updateVoteDb = async (id) => {
+  try {
+    const response = await axios.get(`${baseUrl}/${id}`)
+    const object = response.data
+    const updatedObject = { ...object, votes: object.votes +1 }
+    await axios.put(`${baseUrl}/${id}`, updatedObject)
+    return updatedObject
+  } catch (error) {
+    // Handle any errors that occur during the API calls
+    console.error('An error occurred while updating the vote:', error)
+    throw error // Re-throw the error to be handled by the caller
+  }
 }
-
 
 export default { getAll, createNew, updateVoteDb }
