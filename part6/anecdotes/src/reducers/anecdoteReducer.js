@@ -5,16 +5,11 @@ const anecdoteSlice = createSlice({
   name: 'anecdotes',
   initialState: [],
   reducers: {
-    voteFor( state, action ) {
-      const id = action.payload
-      const anecdoteToUpdate = state.find(anecdote => anecdote.id === id)
-      const updatedAnecdote = {
-        ...anecdoteToUpdate,
-        votes: anecdoteToUpdate.votes + 1
-      }
-      // console.log(JSON.parse(JSON.stringify(state))) // due to redux toolkit using immer library under the hood.
+
+    updateVote( state, action ) {
+      const { id, votes } = action.payload
       return state.map(anecdote =>
-        anecdote.id === id ? updatedAnecdote : anecdote
+        anecdote.id === id ? { ...anecdote, votes } : anecdote
       )
     },
 
@@ -28,7 +23,7 @@ const anecdoteSlice = createSlice({
   }
 })
 
-export const { voteFor, setAnecdotes, appendAnecdote } = anecdoteSlice.actions
+export const { updateVote, setAnecdotes, appendAnecdote } = anecdoteSlice.actions
 
 export const initializeAnecdotes = () => {
   return async dispatch => {
@@ -44,4 +39,14 @@ export const createAnecdote = content => {
   }
 }
 
+export const voteFor = id => {
+  return async (dispatch, getState) => {
+    const anecdoteToUpdate = getState().anecdotes.find(anecdote => anecdote.id === id)
+    const updatedAnecdote = await anecdoteService.updateVoteDb(id, anecdoteToUpdate)
+    dispatch(updateVote({ id, votes: updatedAnecdote.votes }))
+  }
+}
+
+
 export default anecdoteSlice.reducer
+
