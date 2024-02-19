@@ -6,6 +6,7 @@ const Notification = () => {
     marginBottom: 5
   }
   
+  // eslint-disable-next-line no-constant-condition
   if (true) return null
 
   return (
