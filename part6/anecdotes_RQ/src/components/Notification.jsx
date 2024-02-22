@@ -11,7 +11,7 @@ const Notification = () => {
   }
   
   // eslint-disable-next-line no-constant-condition
-  if (!notification) return null
+  // if (!notification) return null
 
   return (
     <div style={style}>

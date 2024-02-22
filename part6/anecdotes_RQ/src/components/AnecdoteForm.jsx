@@ -2,16 +2,22 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createAnecdote } from './../requests'
 import {useNotificationDispatch} from '../NotificationContext'
 
+
 const AnecdoteForm = () => {
   const dispatch = useNotificationDispatch()
   const queryClient = useQueryClient()
-
+  
   const newAnecdoteMutation = useMutation({
     mutationFn: createAnecdote,
     onSuccess: (newAnecdote) => {
-    //  queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
     const anecdotes = queryClient.getQueryData(['anecdotes'])
     queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnecdote))
+    dispatch(`You created anecdote: ${newAnecdote.content}`, 5)
+    console.log("success")
+    },
+    onError: (error) => {
+      const errorMessage = error.response.data.error || 'An unknown error occurred';
+      dispatch(`Error: ${errorMessage}`) // doesn't work for some reason
     }
   })
 
@@ -19,10 +25,12 @@ const AnecdoteForm = () => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
-      newAnecdoteMutation.mutate({ content, votes: 0 })
-    //dispatch(`${baseUrl}/${updatedAnecdote.id}`)
-    //dispatch({ type: 'SET_NOTIFICATION', payload: `You created anecdote: ${content}` })
-    dispatch(`You created anecdote: ${content}`, 5)
+    if (content.length < 5) {
+       dispatch('Error: Anecdote must have at least 5 characters', 5);
+       return;
+     }
+    newAnecdoteMutation.mutate({ content, votes: 0 })
+    
 }
 
   return (
