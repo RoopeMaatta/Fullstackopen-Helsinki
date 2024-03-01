@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Routes,
   Route,
   Link,
-  useParams
+  useParams,
+  useNavigate,
+  useMatch
 } from 'react-router-dom'
 
 const Menu = () => {
@@ -21,9 +23,7 @@ const Menu = () => {
 
 
 
-const Anecdote = ({ anecdotes }) => {
-  const id = useParams().id
-  const anecdote = anecdotes.find(a => a.id === Number(id))
+const Anecdote = ({ anecdote }) => {
   return (
     <div>
       <h2>{anecdote.content}</h2>
@@ -74,6 +74,7 @@ const CreateNew = (props) => {
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
 
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -83,6 +84,9 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    navigate('/')
+    props.setNotification(`A new anecdote was succeesfully created: ${content}`)
+    // setTimeout(() => { props.setNotification('')}, 5000)
   }
 
   return (
@@ -108,6 +112,33 @@ const CreateNew = (props) => {
 
 }
 
+const Notification = ({ notification, setNotification }) => {
+
+  const style = {
+    border: 'solid',
+    padding: 10,
+    borderWidth: 1
+  }
+
+  useEffect(() => {
+    if (notification) {
+      const timeoutId = setTimeout(() => {
+        setNotification('')
+      }, 5000)
+
+      // Cleanup function to clear the timeout when the component unmounts or when notification changes
+      return () => clearTimeout(timeoutId)
+    }
+  }, [notification, setNotification])
+
+  if (notification)
+    return (
+      <div style={style}>
+        {notification}
+      </div>
+    )
+}
+
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -127,6 +158,11 @@ const App = () => {
   ])
 
   const [notification, setNotification] = useState('')
+
+  const match = useMatch('/anecdotes/:id')
+  const anecdote = match
+    ? anecdotes.find(a => a.id === Number(match.params.id))
+    : null
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
@@ -151,11 +187,12 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      <Notification notification={notification} setNotification={setNotification} />
 
       <Routes>
-        <Route path="anecdotes/:id" element={ <Anecdote anecdotes={anecdotes} />} />
+        <Route path="anecdotes/:id" element={ <Anecdote anecdote={anecdote} />} />
         <Route path="/about" element={<About />} />
-        <Route path="/create" element={<CreateNew addNew={addNew} />} />
+        <Route path="/create" element={<CreateNew addNew={addNew} setNotification={setNotification} />} />
         <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
       </Routes>
       <Footer />
