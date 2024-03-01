@@ -2,7 +2,8 @@ import { useState } from 'react'
 import {
   Routes,
   Route,
-  Link
+  Link,
+  useParams
 } from 'react-router-dom'
 
 const Menu = () => {
@@ -19,11 +20,29 @@ const Menu = () => {
 }
 
 
+
+const Anecdote = ({ anecdotes }) => {
+  const id = useParams().id
+  const anecdote = anecdotes.find(a => a.id === Number(id))
+  return (
+    <div>
+      <h2>{anecdote.content}</h2>
+      <div>By: {anecdote.author}</div>
+      <br />
+      <div>{anecdote.info}</div>
+      <br />
+    </div>
+  )
+}
+
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+      {anecdotes.map(anecdote =>
+        <li key={anecdote.id} >
+          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>)}
     </ul>
   </div>
 )
@@ -134,6 +153,7 @@ const App = () => {
       <Menu />
 
       <Routes>
+        <Route path="anecdotes/:id" element={ <Anecdote anecdotes={anecdotes} />} />
         <Route path="/about" element={<About />} />
         <Route path="/create" element={<CreateNew addNew={addNew} />} />
         <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
