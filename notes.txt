@@ -1,31 +1,25 @@
-// .eslintRx.cjs
-// Before edits:
-module.exports = {
-  root: true,
-  env: { browser: true, es2020: true },
-  extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:react/jsx-runtime',
-    'plugin:react-hooks/recommended',
-  ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
-  parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
-  settings: { react: { version: '18.2' } },
-  plugins: ['react-refresh'],
-  rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
-    'react/prop-types': false
-  },
-}
 
 
 
-// 
-npm test -- --coverage --collectCoverageFrom='src/**/*.{jsx,js}'
+
+
+npm install eslint --save-dev
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // create-react-app newer way to do:
     npm create vite@latest part1 -- --template react
@@ -53,83 +47,4 @@ npm test -- --coverage --collectCoverageFrom='src/**/*.{jsx,js}'
     The files App.css and index.css, and the directory assets
     may be deleted as they are not needed in our application right now.
 
-
-
-
-
-
-
-//notes for countries
-countries names 
-    - filter with input
-    - 
-
-
-///////////
-
-//vs code REST client plugin
--> test api requests
-
-
-
-
-///////////////////////////////////
-
-
-
-
-
-    // const togglableContentElement = screen.getByText('Hidden Content').closest('.togglableContent')
-    // // Check if it has display: none
-    // expect(togglableContentElement).toHaveStyle('display: none')
-
-
-
-
-
-    // const hiddenDetails = screen.getAllByText(/Title:|Url:|Author:|Likes:/i)
-    //   .filter(element => {
-    //   // Check if the element or its ancestor (up to the parent div) has 'display: none'
-    //     return (
-    //       window.getComputedStyle(element).getPropertyValue('display') === 'none' ||
-    //       window.getComputedStyle(element.parentElement).getPropertyValue('display') === 'none' ||
-    //       window.getComputedStyle(element.parentElement.parentElement).getPropertyValue('display') === 'none'
-    //     )
-    //   })
-
-    // console.log('hiddenDetails', hiddenDetails)
-    // expect(hiddenDetails.length).toBe(4)
-
-
-    // ------------------------------------------------
-
-
-    // const allContent = screen.getAllByText(/Testing Title/i)
-    // expect(allContent.some((element) => window.getComputedStyle(element).getPropertyValue('display') !== 'none')).toBe(true)
-    // expect(allContent.some((element) => window.getComputedStyle(element).getPropertyValue('display') === 'none')).toBe(true)
-
-
-
-    // // Title is visible
-    // const titleElements = screen.getAllByText(/Testing Title/i)
-    // const visibleTitle = titleElements.find((element) => window.getComputedStyle(element).getPropertyValue('display') !== 'none')
-    // expect(visibleTitle).toBeDefined()
-
-    // // Author is visible
-    // const authorElements = screen.getAllByText(/Testing Author/i)
-    // const visibleAuthor = authorElements.find((element) => window.getComputedStyle(element).getPropertyValue('display') !== 'none')
-    // expect(visibleAuthor).toBeDefined()
-
-    // // Details are hidden (title, url, author, likes)
-    // const hiddenTitle = titleElements.find((element) => window.getComputedStyle(element).getPropertyValue('display') === 'none')
-    // expect(hiddenTitle).toBeDefined()
-
-    // //const hiddenAuthor = authorElements.find((element) => window.getComputedStyle(element).getPropertyValue('display') === 'none')
-    // //expect(hiddenAuthor).toBeDefined()
-
-    // const hiddenUrl = titleElements.find((element) => window.getComputedStyle(element).getPropertyValue('display') === 'none')
-    // expect(hiddenUrl).toBeDefined()
-
-    // console.log('TitleElements', titleElements)
-    // console.log('AuthorElements', authorElements)
 
