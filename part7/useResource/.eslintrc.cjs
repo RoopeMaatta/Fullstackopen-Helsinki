@@ -1,12 +1,4 @@
 
-
-rm -rf .git
-
-// INSTAL: esLint
-npm install eslint --save-dev
-
-// CONFIGURE: .eslintrc.cjs
-
 module.exports = {
   root: true,
   env: { browser: true, es2020: true, "jest/globals": true },
@@ -47,44 +39,3 @@ module.exports = {
     "no-unused-vars": 0    
   },
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// create-react-app newer way to do:
-    npm create vite@latest part1 -- --template react
-    cd part1
-    npm install
-    // add "--host" to package.json scripts "dev"
-    npm run dev
-
-
-// simpligfy start of app:
-    main.jsx
-        import ReactDOM from 'react-dom/client'
-        import App from './App'
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />)
-    app.jsx
-        const App = () => {
-        return (
-            <div>
-            <p>Hello world</p>
-            </div>
-        )
-        }
-
-        export default App
-    The files App.css and index.css, and the directory assets
-    may be deleted as they are not needed in our application right now.
-
-
