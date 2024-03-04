@@ -71,9 +71,6 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  // const [content, setContent] = useState('')
-  // const [author, setAuthor] = useState('')
-  // const [info, setInfo] = useState('')
   const content = useField("text")
   const author = useField("text")
   const info = useField("text")
@@ -90,8 +87,15 @@ const CreateNew = (props) => {
     })
     navigate('/')
     props.setNotification(`A new anecdote was succeesfully created: ${content.value}`)
-    // setTimeout(() => { props.setNotification('')}, 5000)
   }
+
+  const handleReset = (e) => {
+    content.reset()
+    author.reset()
+    info.reset()
+  }
+
+
 
   return (
     <div>
@@ -109,7 +113,8 @@ const CreateNew = (props) => {
           url for more info
           <input  {...info} />
         </div>
-        <button>create</button>
+        <button type="submit" name="create">create</button>
+        <button type="button" name="reset" onClick={handleReset}>reset</button>
       </form>
     </div>
   )
