@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import InputField from './InputField'
 import { useAuthenticationContext } from '../hooks/useAuthentication'
+import { useNotificationContext } from '../NotificationContext'
 
 const LoginForm = () => {
-  const { handleLogin, showNotification } = useAuthenticationContext()
+  const { handleLogin } = useAuthenticationContext()
+  const { showNotification } = useNotificationContext()
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')

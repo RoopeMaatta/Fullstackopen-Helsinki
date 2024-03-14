@@ -4,19 +4,22 @@ import Togglable from './Togglable'
 import blogServices from '../services/blogs'
 const { create } = blogServices
 import { UserAuthenticationContext } from '../hooks/useAuthentication'
+import { useNotificationContext } from '../NotificationContext'
 
 const NewBlogForm = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const { setBlogUpdate, showNotification } = useContext(UserAuthenticationContext)
+  const { setBlogUpdate } = useContext(UserAuthenticationContext)
+  const { showNotification } = useNotificationContext()
   const newBlogFormRef = useRef()
 
   const handleSubmitNewBlog = async (event) => {
     event.preventDefault()
     try {
       await create({ title, author, url })
+      console.log(showNotification)
       showNotification('New blog added successfully')
       setTitle('')
       setAuthor('')

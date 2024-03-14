@@ -4,19 +4,14 @@ import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
 import { useAuthenticationState, UserAuthenticationContext } from './hooks/useAuthentication'
 import { useMemo, useState } from 'react'
+import { useNotificationContext } from './NotificationContext'
 
 const App = () => {
   const { user, handleLogin, handleLogout } = useAuthenticationState()
 
-  const [notification, setNotification] = useState({ message: null, type: null })
   const [blogUpdate, setBlogUpdate] = useState(false)
 
-  const showNotification = (message, type = 'success') => {
-    setNotification({ message, type })
-    setTimeout(() => {
-      setNotification({ message: null, type: null })
-    }, 5000) // Reset after 5 seconds
-  }
+  const { notification } = useNotificationContext()
 
   const contextValue = useMemo(
     () => ({
@@ -25,7 +20,6 @@ const App = () => {
       handleLogout,
       blogUpdate,
       setBlogUpdate,
-      showNotification,
     }),
     [user, handleLogin, handleLogout, blogUpdate]
   )
