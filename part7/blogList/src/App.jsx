@@ -10,17 +10,13 @@ const App = () => {
   const { user, handleLogin, handleLogout } = useAuthenticationState()
   const { notification } = useNotificationContext()
 
-  // const [blogUpdate, setBlogUpdate] = useState(false)
   const contextValue = useMemo(
     () => ({
       user,
       handleLogin,
       handleLogout,
-    //  blogUpdate,
-    //  setBlogUpdate,
     }),
     [user, handleLogin, handleLogout,
-    //  blogUpdate
     ]
   )
 
@@ -41,9 +37,9 @@ const App = () => {
               <button onClick={handleLogout}>Logout</button>
             </div>
             <br />
-            <NewBlogForm /> {/* context: setBlogUpdate, showNotification */}
+            <NewBlogForm /> {/* context: showNotification */}
             <br />
-            <BlogList /> {/* context: user, blogUpdate */}
+            <BlogList /> {/* context: user */}
           </>
         )}
       </div>
