@@ -8,20 +8,20 @@ import { useNotificationContext } from './NotificationContext'
 
 const App = () => {
   const { user, handleLogin, handleLogout } = useAuthenticationState()
-
-  const [blogUpdate, setBlogUpdate] = useState(false)
-
   const { notification } = useNotificationContext()
 
+  // const [blogUpdate, setBlogUpdate] = useState(false)
   const contextValue = useMemo(
     () => ({
       user,
       handleLogin,
       handleLogout,
-      blogUpdate,
-      setBlogUpdate,
+    //  blogUpdate,
+    //  setBlogUpdate,
     }),
-    [user, handleLogin, handleLogout, blogUpdate]
+    [user, handleLogin, handleLogout,
+    //  blogUpdate
+    ]
   )
 
   return (
