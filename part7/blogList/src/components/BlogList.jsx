@@ -6,7 +6,8 @@ import { useNotificationContext } from '../NotificationContext'
 import { useResources } from '../hooks/useResources'
 
 const BlogList = () => {
-  const { user } = useContext(UserAuthenticationContext)
+  const { user, loading } = useContext(UserAuthenticationContext)
+
   const baseUrl = 'https://roopemaatta-humble-sniffle-7g7pqv564pwhrpp-3003.app.github.dev/api/blogs'
   //const { user, blogUpdate } = useContext(UserAuthenticationContext)
   const { showNotification } = useNotificationContext()
@@ -59,6 +60,10 @@ const BlogList = () => {
     borderWidth: 1,
     marginBottom: 5,
     borderColor: 'lightgrey',
+  }
+
+  if (loading) {
+    return <div>Loading...</div>
   }
 
   return (

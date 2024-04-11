@@ -12,28 +12,11 @@ const NewBlogForm = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   const { user } = useContext(UserAuthenticationContext)
-  const { setBlogUpdate } = useContext(UserAuthenticationContext)
   const { showNotification } = useNotificationContext()
   const newBlogFormRef = useRef()
 
   const baseUrl = 'https://roopemaatta-humble-sniffle-7g7pqv564pwhrpp-3003.app.github.dev/api/blogs'
-  // Use useResources hook
-  const { create } = useResources(baseUrl, user.token)
-
-  // const handleSubmitNewBlog = async (event) => {
-  //   event.preventDefault()
-  //   try {
-  //     await create({ title, author, url })
-  //     showNotification('New blog added successfully')
-  //     setTitle('')
-  //     setAuthor('')
-  //     setUrl('')
-  //     newBlogFormRef.current.toggleVisibility()
-  //     setBlogUpdate((prev) => !prev)
-  //   } catch (exception) {
-  //     showNotification('Something went wrong with creating new blog', 'error')
-  //   }
-  // }
+  const { create } = useResources(baseUrl, user?.token)
 
   const handleSubmitNewBlog = async (event) => {
     event.preventDefault()
@@ -46,7 +29,6 @@ const NewBlogForm = () => {
           setAuthor('')
           setUrl('')
           newBlogFormRef.current.toggleVisibility()
-          // No need for setBlogUpdate here since React Query will handle the update
         },
         onError: (error) => {
           showNotification('Something went wrong with creating new blog', 'error')

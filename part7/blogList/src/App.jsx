@@ -2,13 +2,19 @@ import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
+import NavigationBar from './components/NavigationBar'
+import HomePage from './views/HomePage'
+import UsersPage from './views/UsersPage'
+import UsersProfilePage from './views/UsersProfilePage'
+import BlogDetailPage from './views/BlogDetailPage'
 import { useAuthenticationState, UserAuthenticationContext } from './hooks/useAuthentication'
 import { useMemo, useState } from 'react'
 import { useNotificationContext } from './NotificationContext'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
 const App = () => {
-  const { user, handleLogin, handleLogout } = useAuthenticationState()
   const { notification } = useNotificationContext()
+  const { user, handleLogin, handleLogout } = useAuthenticationState()
 
   const contextValue = useMemo(
     () => ({
@@ -16,33 +22,33 @@ const App = () => {
       handleLogin,
       handleLogout,
     }),
-    [user, handleLogin, handleLogout,
-    ]
+    [user, handleLogin, handleLogout]
   )
 
   return (
     <UserAuthenticationContext.Provider value={contextValue}>
-      <div>
-        <h2>Blogs</h2>
-        <Notification message={notification.message} type={notification.type} />
+      <Router>
+        <div>
+          <NavigationBar />
+          <h2>Blogs</h2>
+          <Notification message={notification.message} type={notification.type} />
 
-        {user === null && (
-          <LoginForm /> // context: handleLogin, showNotifivation
-        )}
+          {user === null && (
+            <Routes>
+              <Route path='*' element={<LoginForm />} />
+            </Routes>
+          )}
 
-        {user !== null && (
-          <>
-            <div>
-              {user.name} is logged in
-              <button onClick={handleLogout}>Logout</button>
-            </div>
-            <br />
-            <NewBlogForm /> {/* context: showNotification */}
-            <br />
-            <BlogList /> {/* context: user */}
-          </>
-        )}
-      </div>
+          {user !== null && (
+            <Routes>
+              <Route path='/users' element={<UsersPage />} />
+              <Route path='/users/:id' element={<UsersProfilePage />} />
+              <Route path='/blogs/:id' element={<BlogDetailPage />} />
+              <Route path='/' element={<HomePage />} />
+            </Routes>
+          )}
+        </div>
+      </Router>
     </UserAuthenticationContext.Provider>
   )
 }
