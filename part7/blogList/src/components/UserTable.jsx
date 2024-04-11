@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useImperativeHandle } from 'rea
 import { UserAuthenticationContext } from '../hooks/useAuthentication'
 import { useNotificationContext } from '../NotificationContext'
 import { useResources } from '../hooks/useResources'
+import { Link } from 'react-router-dom'
 
 const UserTable = () => {
   const { user } = useContext(UserAuthenticationContext)
@@ -28,8 +29,10 @@ const UserTable = () => {
             users
               .sort((a, b) => a.username.localeCompare(b.username))
               .map((user) => (
-                <tr key={user.id} >
-                  <td>{user.username}</td>
+                <tr key={user.id}>
+                  <td>
+                    <Link to={`/users/${user.id}`}>{user.username}</Link>
+                  </td>
                   <td>{user.blogs.length}</td>
                 </tr>
               ))}

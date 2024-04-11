@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import UserList from '../components/UserTable'
+import UserTable from '../components/UserTable'
 {
   /* <Link style={padding} to='/'>
         Userlink placeholder
@@ -11,7 +11,7 @@ const UsersPage = () => {
   return (
     <>
       <h3>Users</h3>
-      <UserList />
+      <UserTable />
     </>
   )
 }
