@@ -52,6 +52,20 @@ blogsRouter.get('/', async (request, response, next) => {
   }
 });
 
+blogsRouter.get('/:id', async (request, response, next) => {
+  try {
+    const blog = await Blog.findById(request.params.id).populate('user', { username: 1, name: 1 });
+    if (blog) {
+      response.json(blog);
+    } else {
+      response.status(404).end(); // Not found
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+
 
 
 blogsRouter.post('/', userExtractor, async (request, response, next) => {

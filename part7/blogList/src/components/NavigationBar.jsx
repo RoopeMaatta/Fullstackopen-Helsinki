@@ -8,9 +8,14 @@ const NavigationBar = () => {
     paddingRight: 5,
   }
 
+  const navStyle = {
+    backgroundColor: '#f0f0f0', // Light gray background
+    padding: '10px 0', // Adds some vertical padding for better spacing
+  }
+
   if (user) {
     return (
-      <div>
+      <div style={navStyle}>
         <Link style={padding} to='/'>
           Blogs
         </Link>

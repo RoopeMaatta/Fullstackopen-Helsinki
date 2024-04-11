@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import axios from 'axios'
 
-const useResources = (baseUrl, token) => {
+const useResources = (baseUrl, token, resourceId = null) => {
   const queryClient = useQueryClient()
 
   // Insert the token into headers of each request
@@ -10,13 +10,26 @@ const useResources = (baseUrl, token) => {
     headers: { Authorization: `Bearer ${token}` },
   })
 
-  // Fetching resources
+  // Fetching all resources
   const fetchResources = async () => {
     const response = await axiosInstance.get('')
     return response.data
   }
 
-  const resourcesQuery = useQuery(['resources', baseUrl], fetchResources)
+  const resourcesQuery = useQuery(['resources', baseUrl], fetchResources, {
+    enabled: !resourceId,
+  })
+
+  // Fetching a single resource
+  const fetchResource = async () => {
+    if (!resourceId) return null // Guard clause to ensure an ID is provided
+    const response = await axiosInstance.get(`/${resourceId}`)
+    return response.data
+  }
+
+  const resourceQuery = useQuery(['resource', baseUrl, resourceId], fetchResource, {
+    enabled: !!resourceId, // Only fetch this resource if an ID is provided
+  })
 
   // Creating a resource
   const createMutation = useMutation(
@@ -26,39 +39,16 @@ const useResources = (baseUrl, token) => {
     }
   )
 
-  // // Updating a resource
-  // const updateMutation = useMutation(
-  //   ({ id, ...updateData }) => axiosInstance.put(`/${id}`, updateData).then((res) => res.data),
-  //   {
-  //     onSuccess: () => queryClient.invalidateQueries(['resources', baseUrl]),
-  //   }
-  // )
-
-  // const updateMutation = useMutation(
-  //   ({ id, ...updateData }) => {
-  //     console.log('Sending update for:', id, 'with data:', updateData) // Log data being sent
-  //     return axiosInstance.put(`/${id}`, updateData).then((res) => {
-  //       console.log('Received update response:', res.data) // Log response received
-  //       return res.data
-  //     })
-  //   },
-  //   {
-  //     onSuccess: () => {
-  //       console.log('Invalidating queries for:', baseUrl)
-  //       queryClient.invalidateQueries(['resources', baseUrl])
-  //     },
-  //   }
-  // )
-
   const updateMutation = useMutation(
     async ({ id, data }) => {
       // Directly use axiosInstance which already includes the Authorization header
       return axiosInstance.put(`/${id}`, data).then((res) => res.data)
     },
     {
-      onSuccess: () => {
+      onSuccess: (data, variables) => {
         // Ensure to invalidate queries that match the fetch queries
-        queryClient.invalidateQueries(['resources', baseUrl])
+        queryClient.invalidateQueries(['resource', baseUrl, variables.id])
+        //queryClient.invalidateQueries(['resources', baseUrl])
       },
     }
   )
@@ -72,10 +62,10 @@ const useResources = (baseUrl, token) => {
   )
 
   return {
-    resources: resourcesQuery.data,
-    isLoading: resourcesQuery.isLoading,
-    isError: resourcesQuery.isError,
-    error: resourcesQuery.error,
+    resources: resourceId ? resourceQuery.data : resourcesQuery.data, // Decide what to return based on if an ID is provided
+    isLoading: resourceId ? resourceQuery.isLoading : resourcesQuery.isLoading,
+    isError: resourceId ? resourceQuery.isError : resourcesQuery.isError,
+    error: resourceId ? resourceQuery.error : resourcesQuery.error,
     create: createMutation.mutate,
     update: updateMutation.mutate,
     delete: deleteMutation.mutate,

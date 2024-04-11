@@ -14,24 +14,23 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
 
   return (
     <div className='blog-item'>
-      <div>
+      <h4>
         {blog.title} by {blog.author}
-      </div>
-      <Togglable buttonLabel='Show Details'>
-        <ul>
-          <li>Title: {blog.title}</li>
-          <li>Url: {blog.url}</li>
-          <li>
-            Likes: {blog.likes} <button onClick={() => handleLike(blog)}>Like</button>
-          </li>
-          <li>Author: {blog.author}</li>
-          {userCreatedBlog && (
-            <button className='delete-blog' onClick={() => handleDelete(blog)}>
-              Delete blog
-            </button>
-          )}
-        </ul>
-      </Togglable>
+      </h4>
+
+      <ul>
+        <li>Title: {blog.title}</li>
+        <li>Url: {blog.url}</li>
+        <li>
+          Likes: {blog.likes} <button onClick={() => handleLike(blog)}>Like</button>
+        </li>
+        <li>Author: {blog.author}</li>
+        {userCreatedBlog && (
+          <button className='delete-blog' onClick={() => handleDelete(blog)}>
+            Delete blog
+          </button>
+        )}
+      </ul>
     </div>
   )
 }
