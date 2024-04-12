@@ -10,13 +10,13 @@ GET {{baseUrl}}/api/blogs
 #Post blog to server (remember empty line between header and request body)
 POST {{baseUrl}}/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ild1ZmxlIEF1dGhvciIsImlkIjoiNjU2NzM3ZTY1NjFmMTM3OWQwYmJmYjQzIiwiaWF0IjoxNzAxOTQwMjY1LCJleHAiOjE3MDE5NDM4NjV9.EHbzUyelahiKsawrfTwzLoNRDYu6ToE4huEJF3U-l6Y
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ild1ZmxlIEF1dGhvciIsImlkIjoiNjU2NzM3ZTY1NjFmMTM3OWQwYmJmYjQzIiwiaWF0IjoxNzEyOTA3OTg1LCJleHAiOjE3MTI5MTE1ODV9.5koJS8SKYar7hLb8sa5JpAHqHm7VNYmSi6A77vW4UYw
 
 {
-    "title": "THIS BOOK IS WUFFLES PRIVATE BOOK",
+    "title": "THIS BOOK IS WUFFLES PRIVATE BOOK3333",
     "author": "LeWriter2",
     "url": "www.PRIVATE.com/Hiss",
-    "likes": 4
+    "likes": 4,
 }
 
 ###

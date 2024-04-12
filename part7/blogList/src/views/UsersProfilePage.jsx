@@ -24,7 +24,7 @@ const UsersProfilePage = () => {
     marginBottom: 5,
   }
 
-  const userBlogs = blogs.filter(blog => blog.user.id === id)
+  const userBlogs = blogs.filter((blog) => blog.user.id === id)
   const userProfileName = userBlogs[0]?.user
 
   return (
@@ -37,7 +37,7 @@ const UsersProfilePage = () => {
             .sort((a, b) => b.likes - a.likes)
             .map((blog) => (
               <li key={blog.id} style={blogStyle}>
-                {blog.title}
+                <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
               </li>
             ))}
       </ul>

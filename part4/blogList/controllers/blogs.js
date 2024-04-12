@@ -8,33 +8,6 @@ const { userExtractor } = require('../utils/middleware')
 
 const jwt = require('jsonwebtoken')
 
-
-
-// blogsRouter.get('/', async (request, response, next) => {
-//   try {
-//     const blogs = await Blog
-//       .find({}).populate("user", { username: 1, name: 1 })
-//     response.json(blogs)
-//   } catch (error) {
-//     next(error)
-//   }
-// })
-
-
-// blogsRouter.get('/', userExtractor, async (request, response, next) => {
-//   try {
-//     // Use the user's ID to filter blogs
-//     const userId = request.user.id; // Make sure this matches how userExtractor sets the user
-
-//     const blogs = await Blog
-//       .find({ user: userId }).populate("user", { username: 1, name: 1 });
-
-//     response.json(blogs);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
 blogsRouter.get('/', async (request, response, next) => {
   try {
     let blogs;
@@ -69,7 +42,7 @@ blogsRouter.get('/:id', async (request, response, next) => {
 
 
 blogsRouter.post('/', userExtractor, async (request, response, next) => {
-  const { title, author, url, likes } = request.body;
+  const { title, author, url, likes, comments } = request.body;
 
   const userId = request.user.id; // or whatever property you've set in userExtractor
 
@@ -85,7 +58,8 @@ blogsRouter.post('/', userExtractor, async (request, response, next) => {
       author,
       url,
       likes: likes || 0,
-      user: user._id
+      user: user._id,
+      comments: comments || []
     });
 
     const savedBlog = await blog.save();
@@ -123,7 +97,8 @@ blogsRouter.put('/:id', async (request, response, next) => {
   const blog = {
     title: body.title,
     url: body.url,
-    likes: body.likes
+    likes: body.likes,
+    comments: body.comments
   }
 
   try {
