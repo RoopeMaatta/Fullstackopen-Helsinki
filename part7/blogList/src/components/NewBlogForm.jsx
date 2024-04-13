@@ -6,6 +6,7 @@ const { create } = blogServices
 import { UserAuthenticationContext } from '../hooks/useAuthentication'
 import { useNotificationContext } from '../NotificationContext'
 import { useResources } from '../hooks/useResources'
+import { TextField, Button } from '@mui/material'
 
 const NewBlogForm = () => {
   const [title, setTitle] = useState('')
@@ -40,37 +41,45 @@ const NewBlogForm = () => {
   return (
     <Togglable buttonLabel='Create new blog' ref={newBlogFormRef}>
       <form className='newBlogFormClassName' onSubmit={handleSubmitNewBlog}>
-        <InputField
-          label='title'
+        <TextField
+          label='Title'
           type='text'
+          variant='outlined'
           id='title'
           value={title}
           name='Title'
           onChange={({ target }) => setTitle(target.value)}
-          placeholder='Enter title'
+          fullWidth
+          margin='normal'
         />
 
-        <InputField
-          label='author'
+        <TextField
+          label='Author'
           type='text'
+          variant='outlined'
           id='author'
           value={author}
           name='Author'
           onChange={({ target }) => setAuthor(target.value)}
-          placeholder='Enter author'
+          fullWidth
+          margin='normal'
         />
 
-        <InputField
-          label='url'
+        <TextField
+          label='URL'
           type='text'
+          variant='outlined'
           id='url'
           value={url}
           name='Url'
           onChange={({ target }) => setUrl(target.value)}
-          placeholder='Enter url'
+          fullWidth
+          margin='normal'
         />
 
-        <button type='submit'>Submit new Blog</button>
+        <Button type='submit' variant='contained' color='primary'>
+          Submit New Blog
+        </Button>
       </form>
     </Togglable>
   )

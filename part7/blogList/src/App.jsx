@@ -11,6 +11,7 @@ import { useAuthenticationState, UserAuthenticationContext } from './hooks/useAu
 import { useMemo, useState } from 'react'
 import { useNotificationContext } from './NotificationContext'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { Container } from '@mui/material'
 
 const App = () => {
   const { notification } = useNotificationContext()
@@ -26,30 +27,32 @@ const App = () => {
   )
 
   return (
-    <UserAuthenticationContext.Provider value={contextValue}>
-      <Router>
-        <div>
-          <NavigationBar />
-          <h2>Blogs</h2>
-          <Notification message={notification.message} type={notification.type} />
+    <Container>
+      <UserAuthenticationContext.Provider value={contextValue}>
+        <Router>
+          <div>
+            <NavigationBar />
+            <h2>Blogs</h2>
+            <Notification message={notification.message} type={notification.type} />
 
-          {user === null && (
-            <Routes>
-              <Route path='*' element={<LoginForm />} />
-            </Routes>
-          )}
+            {user === null && (
+              <Routes>
+                <Route path='*' element={<LoginForm />} />
+              </Routes>
+            )}
 
-          {user !== null && (
-            <Routes>
-              <Route path='/users' element={<UsersPage />} />
-              <Route path='/users/:id' element={<UsersProfilePage />} />
-              <Route path='/blogs/:id' element={<BlogDetailPage />} />
-              <Route path='/' element={<HomePage />} />
-            </Routes>
-          )}
-        </div>
-      </Router>
-    </UserAuthenticationContext.Provider>
+            {user !== null && (
+              <Routes>
+                <Route path='/users' element={<UsersPage />} />
+                <Route path='/users/:id' element={<UsersProfilePage />} />
+                <Route path='/blogs/:id' element={<BlogDetailPage />} />
+                <Route path='/' element={<HomePage />} />
+              </Routes>
+            )}
+          </div>
+        </Router>
+      </UserAuthenticationContext.Provider>
+    </Container>
   )
 }
 
