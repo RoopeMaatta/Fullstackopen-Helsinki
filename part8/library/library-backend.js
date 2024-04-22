@@ -1,5 +1,7 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
+const { UniqueDirectiveNamesRule } = require('graphql')
+const { v4: uuidv4 } = require('uuid')
 
 let authors = [
   {
@@ -119,6 +121,15 @@ const typeDefs = `
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
   }
+
+  type Mutation {
+    addBook(
+      title: String!,
+      author: String,
+      published: Int,
+      genres: [String]
+    ): Book
+  }
 `
 
 const resolvers = {
@@ -126,7 +137,7 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: (root, args) => {
-      return books.filter((book) => {
+      return books.filter(book => {
         // Check if author and genre argument is provided and matches the books
         const authorMatch = args.author ? book.author === args.author : true
         const genreMatch = args.genre ? book.genres.includes(args.genre) : true
@@ -135,8 +146,8 @@ const resolvers = {
       })
     },
     allAuthors: () => {
-      return authors.map((author) => {
-        const bookCount = books.filter((book) => book.author === author.name).length
+      return authors.map(author => {
+        const bookCount = books.filter(book => book.author === author.name).length
         return {
           ...author,
           bookCount,
@@ -144,6 +155,26 @@ const resolvers = {
       })
     },
   },
+  Mutation: {
+    addBook: (root, args) => {
+      const book = { ...args, id: uuidv4() }
+      books = books.concat(book)
+
+      // Check if author is in database.
+      const authorExists = authors.some(author => author.name === args.author)
+      if (!authorExists) {
+        const newAuthor = {
+          name: args.author,
+          id: uuidv4(),
+          born: null,
+        }
+
+        authors = authors.concat(newAuthor)
+      }
+      // if not concat it to authors, setting born to null
+      return book
+    }
+  }
 }
 
 const server = new ApolloServer({
