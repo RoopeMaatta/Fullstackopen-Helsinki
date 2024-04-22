@@ -1,6 +1,7 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 const { UniqueDirectiveNamesRule } = require('graphql')
+const { argsToArgsConfig } = require('graphql/type/definition')
 const { v4: uuidv4 } = require('uuid')
 
 let authors = [
@@ -129,7 +130,13 @@ const typeDefs = `
       published: Int,
       genres: [String]
     ): Book
-  }
+
+    editAuthor(
+      name: String!,
+      setBornTo: Int!
+    ): Author
+
+  } 
 `
 
 const resolvers = {
@@ -173,8 +180,18 @@ const resolvers = {
       }
       // if not concat it to authors, setting born to null
       return book
-    }
-  }
+    },
+
+    editAuthor: (root, args) => {
+      const author = authors.find(a => a.name === args.name)
+      if (!author) {
+        return null
+      }
+      const updatedAuthor = { ...author, born: args.setBornTo }
+      authors = authors.map(a => (a.name === args.name ? updatedAuthor : a))
+      return updatedAuthor
+    },
+  },
 }
 
 const server = new ApolloServer({
