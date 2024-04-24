@@ -1,9 +1,8 @@
 import { useQuery } from '@apollo/client'
-import { ALL_AUTHORS } from '../graphql/authors'
+import { ALL_AUTHORS } from '../graphql/authorsQl'
 
 const Authors = props => {
   const authors = useQuery(ALL_AUTHORS)
-  console.log(authors)
 
   if (authors.loading) {
     return <div>loading...</div>
