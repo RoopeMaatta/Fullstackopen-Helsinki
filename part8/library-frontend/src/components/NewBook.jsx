@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { useMutation } from '@apollo/client'
+import { CREATE_BOOK } from '../graphql/booksQl'
+import { ALL_BOOKS } from '../graphql/booksQl'
 
 const NewBook = props => {
   const [title, setTitle] = useState('')
@@ -7,8 +10,22 @@ const NewBook = props => {
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 
+  const [createBook] = useMutation(CREATE_BOOK, {
+    refetchQueries: [{ query: ALL_BOOKS }],
+  })
+
   const submit = async event => {
     event.preventDefault()
+
+    const publishedInt = parseInt(published, 10)
+    createBook({
+      variables: {
+        title,
+        author,
+        published: publishedInt,
+        genres,
+      },
+    })
 
     console.log('add book...')
 
