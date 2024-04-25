@@ -1,6 +1,7 @@
 import { useQuery, useMutation } from '@apollo/client'
 import { useState } from 'react'
 import { ALL_AUTHORS, EDIT_AUTHOR } from '../graphql/authorsQl'
+import Select from 'react-select'
 
 const Authors = props => {
   const [name, setName] = useState('')
@@ -14,6 +15,15 @@ const Authors = props => {
 
   if (authors.loading) {
     return <div>loading...</div>
+  }
+
+  const authorsOptions = authors.data.allAuthors.map(a => ({
+    value: a.name,
+    label: a.name,
+  }))
+
+  const handleAuthorChange = selectedOption => {
+    setName(selectedOption.value)
   }
 
   const submit = async event => {
@@ -55,7 +65,11 @@ const Authors = props => {
       <form onSubmit={submit}>
         <div>
           Author
-          <input value={name} onChange={({ target }) => setName(target.value)} />
+          <Select
+            options={authorsOptions}
+            onChange={handleAuthorChange}
+            value={authorsOptions.find(option => option.value === name)}
+          />
         </div>
         <div>
           Born
