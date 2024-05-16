@@ -6,6 +6,7 @@ const { v4: uuidv4 } = require('uuid')
 const mongoose = require('mongoose')
 const Author = require('./models/authorSchema')
 const Book = require('./models/bookSchema')
+const { GraphQLError } = require('graphql')
 
 mongoose.set('strictQuery', false)
 
@@ -68,50 +69,94 @@ const typeDefs = `
 const resolvers = {
   Author: {
     bookCount: async author => {
-      // Count documents where the 'author' field matches the current author's ID
-      return Book.countDocuments({ author: author._id })
+      try {
+        const count = await Book.countDocuments({ author: author._id })
+        return count
+      } catch (error) {
+        console.error('Error calculating book count for author:', error)
+        throw new GraphQLError('Failed to calculate book count', {
+          extensions: { code: 'INTERNAL_SERVER_ERROR', error },
+        })
+      }
     },
   },
   Query: {
-    bookCount: async () => Book.countDocuments(),
-    authorCount: async () => Author.countDocuments(),
+    bookCount: async () => {
+      try {
+        const count = await Book.countDocuments()
+        return count
+      } catch (error) {
+        console.error('Error fetching book count:', error)
+        throw new GraphQLError('Failed to fetch book count', {
+          extensions: { code: 'INTERNAL_SERVER_ERROR', error },
+        })
+      }
+    },
+    authorCount: async () => {
+      try {
+        const count = await Author.countDocuments()
+        return count
+      } catch (error) {
+        console.error('Error fetching author count:', error)
+        throw new GraphQLError('Failed to fetch author count', {
+          extensions: { code: 'INTERNAL_SERVER_ERROR', error },
+        })
+      }
+    },
     allBooks: async (root, args) => {
-      let query = {}
+      try {
+        let query = {}
 
-      if (args.author) {
-        const author = await Author.findOne({ name: args.author })
-        if (author) {
-          query.author = author._id
+        if (args.author) {
+          const author = await Author.findOne({ name: args.author })
+          if (author) {
+            query.author = author._id
+          }
         }
-      }
 
-      if (args.genre) {
-        query.genres = { $in: [args.genre] }
-      }
+        if (args.genre) {
+          query.genres = { $in: [args.genre] }
+        }
 
-      return Book.find(query).populate('author')
+        return await Book.find(query).populate('author')
+      } catch (error) {
+        console.error('Error fetching books:', error)
+        throw new GraphQLError('Failed to fetch books', {
+          extensions: { code: 'INTERNAL_SERVER_ERROR', error },
+        })
+      }
     },
 
     allAuthors: async () => {
-      return Author.aggregate([
-        // Left outer join books to author
-        {
-          $lookup: {
-            from: 'books',
-            localField: '_id',
-            foreignField: 'author',
-            as: 'books',
+      try {
+        return await Author.aggregate([
+          // Left outer join books to author
+          {
+            $lookup: {
+              from: 'books',
+              localField: '_id',
+              foreignField: 'author',
+              as: 'books',
+            },
           },
-        },
-        {
-          $project: {
-            name: 1,
-            id: '$_id',
-            born: 1,
-            bookCount: { $size: '$books' },
+          {
+            $project: {
+              name: 1,
+              id: '$_id',
+              born: 1,
+              bookCount: { $size: '$books' },
+            },
           },
-        },
-      ])
+        ])
+      } catch (error) {
+        console.error('Error fetching authors:', error)
+        throw new GraphQLError('Failed to fetch authors', {
+          extensions: {
+            code: 'INTERNAL_SERVER_ERROR',
+            error,
+          },
+        })
+      }
     },
   },
   Mutation: {
@@ -135,7 +180,25 @@ const resolvers = {
         return book
       } catch (error) {
         console.error('Error adding book:', error)
-        throw new Error(`Failed to add book due to error: ${error.message}`)
+
+        // Check if error is a validation error
+        if (error.name === 'ValidationError') {
+          // Provide detailed validation error information
+          throw new GraphQLError('Invalid input', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: error.errors, // Detailed error information
+            },
+          })
+        }
+
+        throw new GraphQLError(`Failed to add book due to error: ${error.message}`, {
+          extensions: {
+            code: 'INTERNAL_SERVER_ERROR',
+            invalidArgs: args,
+            error,
+          },
+        })
       }
     },
 
@@ -148,12 +211,34 @@ const resolvers = {
         )
         if (!updatedAuthor) {
           console.log('No author found with the provided name.')
-          return null
+          throw new GraphQLError('No author found with the provided name', {
+            extensions: {
+              code: 'NOT_FOUND',
+              invalidArgs: args.name,
+            },
+          })
         }
         return updatedAuthor
       } catch (error) {
         console.error('Error editing author:', error)
-        throw new Error('Error editing author')
+
+        // Check if error is a validation error
+        if (error.name === 'ValidationError') {
+          // Provide detailed validation error information
+          throw new GraphQLError('Invalid input', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: error.errors, // Detailed error information
+            },
+          })
+        }
+
+        throw new GraphQLError('Error editing author', {
+          extensions: {
+            code: 'INTERNAL_SERVER_ERROR',
+            error,
+          },
+        })
       }
     },
   },
