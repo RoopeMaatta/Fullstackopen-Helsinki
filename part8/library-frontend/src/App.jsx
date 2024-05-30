@@ -5,7 +5,7 @@ import NewBook from './components/NewBook'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
 const App = () => {
-  const [page, setPage] = useState('authors')
+  // const [page, setPage] = useState('authors')
 
   return (
     <Router>
