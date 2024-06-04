@@ -32,12 +32,26 @@ const server = new ApolloServer({
 startStandaloneServer(server, {
   listen: { port: 4000 },
   context: async ({ req, res }) => {
+    // console.log('Headers:', req.headers) // Log headers
     const auth = req ? req.headers.authorization : null
-    if (auth && auth.startsWith('Bearer ')) {
-      const decodedToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET)
-      const currentUser = await User.findById(decodedToken.id)
-      return { currentUser }
+    const operation = req.body.operationName
+
+    // Allow unauthenticated access for introspection queries
+    if (operation && operation.startsWith('__')) {
+      return {} // Return an empty context for introspection queries
     }
+
+    if (auth && auth.startsWith('Bearer ')) {
+      try {
+        const decodedToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET)
+        const currentUser = await User.findById(decodedToken.id)
+        return { currentUser }
+      } catch (error) {
+        console.error('Error verifying JWT:', error)
+        throw new Error('Authentication failed')
+      }
+    }
+    return {}
   },
 }).then(({ url }) => {
   console.log(`Server ready at ${url}`)

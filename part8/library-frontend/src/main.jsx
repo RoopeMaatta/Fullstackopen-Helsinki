@@ -12,9 +12,14 @@ const httpLink = createHttpLink({
 
 // Middleware that adds the necessary headers
 const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('token')
+  console.log('AuthLink Token:', token)
+
   return {
     headers: {
       ...headers,
+      authorization: token ? `Bearer ${token}` : null,
+      'Apollo-Require-Preflight': 'true',
       'Content-Type': 'application/json', // Setting Content-Type to 'application/json'
       'x-apollo-operation-name': 'ApolloOperation', // Custom header to bypass CSRF protection if needed
     },
@@ -26,6 +31,8 @@ const client = new ApolloClient({
   link: authLink.concat(httpLink), // Use the authLink to add headers to each request
   cache: new InMemoryCache(),
 })
+
+export default client
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
