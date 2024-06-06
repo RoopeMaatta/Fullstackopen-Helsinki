@@ -41,6 +41,11 @@ const typeDefs = `
 `
 
 const resolvers = {
+  Book: {
+    author: async book => {
+      return await Author.findById(book.author)
+    },
+  },
   Author: {
     bookCount: async author => {
       try {
@@ -131,7 +136,7 @@ const resolvers = {
         }
         const book = new Book({ ...args, author: author._id })
         await book.save()
-        return book
+        return book.populate('author')
       } catch (error) {
         console.error('Error adding book:', error)
         if (error.name === 'ValidationError') {

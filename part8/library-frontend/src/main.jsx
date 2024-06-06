@@ -7,6 +7,7 @@ import { setContext } from '@apollo/client/link/context'
 
 // HTTP connection to the GraphQL API
 const httpLink = createHttpLink({
+  // uri: 'http://localhost:4000/',
   uri: 'https://roopemaatta-humble-sniffle-7g7pqv564pwhrpp-4000.app.github.dev/',
 })
 
@@ -19,9 +20,9 @@ const authLink = setContext((_, { headers }) => {
     headers: {
       ...headers,
       authorization: token ? `Bearer ${token}` : null,
-      'Apollo-Require-Preflight': 'true',
-      'Content-Type': 'application/json', // Setting Content-Type to 'application/json'
-      'x-apollo-operation-name': 'ApolloOperation', // Custom header to bypass CSRF protection if needed
+      //'Apollo-Require-Preflight': 'true',
+      //'Content-Type': 'application/json', // Setting Content-Type to 'application/json'
+      //'x-apollo-operation-name': 'ApolloOperation', // Custom header to bypass CSRF protection if needed
     },
   }
 })
@@ -32,12 +33,11 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 })
 
-export default client
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>
+  // </React.StrictMode>
 )

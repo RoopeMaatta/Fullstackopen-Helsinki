@@ -88,3 +88,18 @@ Playwright = new prefered e2e testing library
     may be deleted as they are not needed in our application right now.
 
 
+
+
+mutation Mutation($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
+  addBook(title: $title, author: $author, published: $published, genres: $genres) {
+    title
+    author {
+      name
+    }
+    published
+    genres
+  }
+}
+
+
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ild1ZmZlbCIsImlkIjoiNjY1OWExMzZmMDVmODY5NjAyNWIxNjkyIiwiaWF0IjoxNzE3NTk5MTcyfQ.7HUJK3VSJpogo6TLWMxTea59b-YhEYL3ERanCEecFoc"

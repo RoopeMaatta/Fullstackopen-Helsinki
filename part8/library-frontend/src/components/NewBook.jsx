@@ -5,9 +5,9 @@ import { ALL_BOOKS } from '../graphql/booksQl'
 import { ALL_AUTHORS } from '../graphql/authorsQl'
 
 const NewBook = props => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [published, setPublished] = useState('')
+  const [title, setTitle] = useState('WufBookTitle')
+  const [author, setAuthor] = useState('AuthorName2')
+  const [published, setPublished] = useState('2269')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 

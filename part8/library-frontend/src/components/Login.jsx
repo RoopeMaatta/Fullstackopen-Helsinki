@@ -3,13 +3,15 @@ import { useMutation } from '@apollo/client'
 import { TextField, Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { LOGIN } from '../graphql/loginQl'
-import client from '../main'
+import { useApolloClient } from '@apollo/client'
+
 
 const LoginForm = ({ setError, setToken }) => {
   const navigate = useNavigate()
+  const client = useApolloClient()
 
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('Wuffel')
+  const [password, setPassword] = useState('secret')
 
   const [login, result] = useMutation(LOGIN, {
     onError: error => {
@@ -27,8 +29,9 @@ const LoginForm = ({ setError, setToken }) => {
       localStorage.setItem('token', token)
       console.log('Token set in localStorage:', localStorage.getItem('token'))
       client.resetStore()
+      navigate('/authors')
     }
-  }, [result.data, setToken, result])
+  }, [result.data, setToken, result, navigate])
 
   const handleSubmit = async event => {
     event.preventDefault()
@@ -38,7 +41,7 @@ const LoginForm = ({ setError, setToken }) => {
       console.log('handleSubmit result.data:', result.data)
       setUsername('')
       setPassword('')
-      navigate('/authors')
+      // navigate('/authors')
     } catch (exception) {
       // showNotification('Wrong username or password', 'error')
     }

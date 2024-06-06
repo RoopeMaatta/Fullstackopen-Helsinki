@@ -4,14 +4,16 @@ import Books from './components/Books'
 import Login from './components/Login'
 import NewBook from './components/NewBook'
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom'
-import client from './main'
-
+import { useApolloClient } from '@apollo/client'
+//import client from './main'
 
 const App = () => {
   const [token, setToken] = useState(null)
+  const client = useApolloClient()
   //const navigate = useNavigate()
 
   useEffect(() => {
+    console.log('WUUUUFWUUUUFWUUUUFWUUUUF')
     const storedToken = localStorage.getItem('token')
     console.log('Retrieved Token on App Load:', storedToken)
     if (storedToken) {
@@ -37,16 +39,18 @@ const App = () => {
           </Link>
 
           {token ? (
-            <button onClick={logout}>logout</button>
+            <>
+              <button onClick={logout}>logout</button>
+
+              <Link to='/add'>
+                <button>add book</button>
+              </Link>
+            </>
           ) : (
             <Link to='/login'>
               <button>login</button>
             </Link>
           )}
-
-          <Link to='/add'>
-            <button>add book</button>
-          </Link>
         </nav>
 
         <Routes>
