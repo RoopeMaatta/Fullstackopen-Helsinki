@@ -31,7 +31,7 @@ const LoginForm = ({ setError, setToken }) => {
       client.resetStore()
       navigate('/authors')
     }
-  }, [result.data, setToken, result, navigate])
+  }, [result.data, setToken, result, navigate, client])
 
   const handleSubmit = async event => {
     event.preventDefault()
