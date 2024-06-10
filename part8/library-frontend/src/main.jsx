@@ -20,8 +20,8 @@ const authLink = setContext((_, { headers }) => {
     headers: {
       ...headers,
       authorization: token ? `Bearer ${token}` : null,
-      //'Apollo-Require-Preflight': 'true',
-      //'Content-Type': 'application/json', // Setting Content-Type to 'application/json'
+      'content-type': 'application/json',
+      'Apollo-Require-Preflight': 'true',
       //'x-apollo-operation-name': 'ApolloOperation', // Custom header to bypass CSRF protection if needed
     },
   }
