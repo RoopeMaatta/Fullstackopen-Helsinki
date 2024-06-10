@@ -29,11 +29,6 @@ const Books = props => {
     }, [])
     .sort() // Sort genres alphabetically
 
-  // Filter books by the selected genre
-  const filteredBooks = selectedGenre
-    ? books.data.allBooks.filter(book => book.genres.includes(selectedGenre))
-    : books.data.allBooks
-
   // Styles object for buttons
   const styles = {
     button: {

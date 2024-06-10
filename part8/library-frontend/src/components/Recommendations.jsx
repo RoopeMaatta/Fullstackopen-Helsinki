@@ -5,42 +5,45 @@ import { USER_FAVOURITE_GENRE } from '../graphql/userQl'
 
 const Recommendations = props => {
   const [selectedGenre, setSelectedGenre] = useState('')
-  // const favouriteGenre = useQuery(USER_FAVOURITE_GENRE)
+
   const {
     loading: loadingGenre,
     error: errorGenre,
     data: dataGenre,
   } = useQuery(USER_FAVOURITE_GENRE)
 
+  const { loading: loadingBooks, error: errorBooks, data: dataBooks } = useQuery(
+    ALL_BOOKS,
+    {
+      variables: { genre: selectedGenre },
+      skip: !selectedGenre,
+    }
+  )
+
   useEffect(() => {
     if (dataGenre && dataGenre.me) {
-      setSelectedGenre(dataGenre.me.favoriteGenre)
+      const genre = dataGenre.me.favoriteGenre
+      setSelectedGenre(genre)
     }
   }, [dataGenre])
 
-  const books = useQuery(ALL_BOOKS, {
-    variables: { genre: selectedGenre },
-    skip: !selectedGenre,
-  })
-
-  if (books.loading || loadingGenre) {
+  if (loadingBooks || loadingGenre) {
     return <div>loading...</div>
   }
-  if (books.error) {
-    return <div>Error fetching books: {books.error.message} </div>
+  if (errorBooks) {
+    return <div>Error fetching books: {errorBooks.message} </div>
   }
   if (errorGenre) {
     return <div>Error fetching favorite genre: {errorGenre.message} </div>
   }
-
-  const noBooks = books.data?.allBooks?.length === 0
+  if (!dataBooks) return <div>No data yet...</div>
 
   return (
     <div>
       <h2>recommendations</h2>
       {dataGenre && dataGenre.me && <div>Users favourite Genre: {dataGenre.me.favoriteGenre}</div>}
 
-      {noBooks ? (
+      {dataBooks?.allBooks?.length === 0 ? (
         <p>No books available in this genre.</p>
       ) : (
         <table>
@@ -50,7 +53,7 @@ const Recommendations = props => {
               <th>author</th>
               <th>published</th>
             </tr>
-            {books.data.allBooks.map(book => (
+            {dataBooks.allBooks.map(book => (
               <tr key={book.id || book.title}>
                 <td>{book.title}</td>
                 <td>{book.author.name}</td>
