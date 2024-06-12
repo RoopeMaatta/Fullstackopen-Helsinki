@@ -1,5 +1,13 @@
 const { ApolloServer } = require('@apollo/server')
-const { startStandaloneServer } = require('@apollo/server/standalone')
+const { expressMiddleware } = require('@apollo/server/express4')
+const { ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer')
+const { makeExecutableSchema } = require('@graphql-tools/schema')
+const express = require('express')
+const cors = require('cors')
+const http = require('http')
+
+// const { startStandaloneServer } = require('@apollo/server/standalone')
+
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
@@ -7,7 +15,7 @@ require('dotenv').config()
 const { typeDefs, resolvers } = require('./graphQL/schemaIndex')
 const User = require('./models/userSchema')
 
-mongoose.set('strictQuery', false)
+// mongoose.set('strictQuery', false)
 
 const MONGODB_URI = process.env.MONGODB_URI
 
@@ -22,37 +30,86 @@ mongoose
     console.log('error connection to MongoDB:', error.message)
   })
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  introspection: true, // Enable introspection
-  playground: true, // Enable GraphQL Playground
-})
+// setup is now within a function
+const start = async () => {
+  const app = express()
+  const httpServer = http.createServer(app)
 
-startStandaloneServer(server, {
-  listen: { port: 4000 },
-  context: async ({ req, res }) => {
-    // console.log('Headers:', req.headers) // Log headers
-    const auth = req ? req.headers.authorization : null
-    const operation = req.body.operationName
+  const server = new ApolloServer({
+    schema: makeExecutableSchema({ typeDefs, resolvers }),
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  })
 
-    // Allow unauthenticated access for introspection queries
-    if (operation && operation.startsWith('__')) {
-      return {} // Return an empty context for introspection queries
-    }
+  await server.start()
 
-    if (auth && auth.startsWith('Bearer ')) {
-      try {
-        const decodedToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET)
-        const currentUser = await User.findById(decodedToken.id)
-        return { currentUser }
-      } catch (error) {
-        console.error('Error verifying JWT:', error)
-        throw new Error('Authentication failed')
-      }
-    }
-    return {}
-  },
-}).then(({ url }) => {
-  console.log(`Server ready at ${url}`)
-})
+  app.use(
+    '/',
+    cors(),
+    express.json(),
+    expressMiddleware(server, {
+      context: async ({ req }) => {
+        const auth = req ? req.headers.authorization : null
+
+        // const operation = req.body.operationName
+        // // Allow unauthenticated access for introspection queries
+        // if (operation && operation.startsWith('__')) {
+        //   return {} // Return an empty context for introspection queries
+        // }
+
+        if (auth && auth.startsWith('Bearer ')) {
+          try {
+            const decodedToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET)
+            const currentUser = await User.findById(decodedToken.id)
+            return { currentUser }
+          } catch (error) {
+            console.error('Error verifying JWT:', error)
+            throw new Error('Authentication failed')
+          }
+        }
+      },
+    })
+  )
+
+
+
+  const PORT = 4000
+
+  httpServer.listen(PORT, () => console.log(`Server is now running on http://localhost:${PORT}`))
+}
+
+start()
+
+// const server = new ApolloServer({
+//   typeDefs,
+//   resolvers,
+//   introspection: true, // Enable introspection
+//   playground: true, // Enable GraphQL Playground
+// })
+
+// startStandaloneServer(server, {
+//   listen: { port: 4000 },
+//   context: async ({ req, res }) => {
+//     // console.log('Headers:', req.headers) // Log headers
+//     const auth = req ? req.headers.authorization : null
+//     const operation = req.body.operationName
+
+//     // Allow unauthenticated access for introspection queries
+//     if (operation && operation.startsWith('__')) {
+//       return {} // Return an empty context for introspection queries
+//     }
+
+//     if (auth && auth.startsWith('Bearer ')) {
+//       try {
+//         const decodedToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET)
+//         const currentUser = await User.findById(decodedToken.id)
+//         return { currentUser }
+//       } catch (error) {
+//         console.error('Error verifying JWT:', error)
+//         throw new Error('Authentication failed')
+//       }
+//     }
+//     return {}
+//   },
+// }).then(({ url }) => {
+//   console.log(`Server ready at ${url}`)
+// })
