@@ -1,6 +1,7 @@
 const { GraphQLError } = require('graphql')
 const Author = require('../models/authorSchema')
 const Book = require('../models/bookSchema')
+const { PubSub } = require('graphql-subscriptions')
 
 const typeDefs = `
   type Author {
@@ -38,7 +39,12 @@ const typeDefs = `
       setBornTo: Int!
     ): Author
   } 
+    type Subscription {
+      bookAdded: Book!
+    }
 `
+
+const pubsub = new PubSub()
 
 const resolvers = {
   Book: {
@@ -136,7 +142,11 @@ const resolvers = {
         }
         const book = new Book({ ...args, author: author._id })
         await book.save()
-        return book.populate('author')
+        const populatedBook = await book.populate('author')
+
+        pubsub.publish('BOOK_ADDED', { bookAdded: populatedBook })
+
+        return populatedBook
       } catch (error) {
         console.error('Error adding book:', error)
         if (error.name === 'ValidationError') {
@@ -176,6 +186,11 @@ const resolvers = {
           extensions: { code: 'INTERNAL_SERVER_ERROR', error },
         })
       }
+    },
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator('BOOK_ADDED'),
     },
   },
 }
