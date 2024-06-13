@@ -20,14 +20,10 @@ const LoginForm = ({ setError, setToken }) => {
   })
 
   useEffect(() => {
-    console.log('useEffect triggered, result:', result)
     if (result.data) {
-      console.log('useEffect result.data:', result.data)
       const token = result.data.login.value
-      console.log('Login Successful, Token:', token)
       setToken(token)
       localStorage.setItem('token', token)
-      console.log('Token set in localStorage:', localStorage.getItem('token'))
       client.resetStore()
       navigate('/authors')
     }
@@ -36,9 +32,7 @@ const LoginForm = ({ setError, setToken }) => {
   const handleSubmit = async event => {
     event.preventDefault()
     try {
-      console.log('Submitting login mutation with:', { username, password })
       await login({ variables: { username, password } })
-      console.log('handleSubmit result.data:', result.data)
       setUsername('')
       setPassword('')
       // navigate('/authors')

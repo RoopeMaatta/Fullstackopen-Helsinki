@@ -4,19 +4,22 @@ import Books from './components/Books'
 import Login from './components/Login'
 import NewBook from './components/NewBook'
 import Recommendations from './components/Recommendations'
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom'
-import { useApolloClient } from '@apollo/client'
-//import client from './main'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { useApolloClient, useSubscription } from '@apollo/client'
+import { BOOK_ADDED } from './graphql/booksQl'
 
 const App = () => {
   const [token, setToken] = useState(null)
   const client = useApolloClient()
-  //const navigate = useNavigate()
 
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const title = data.data.bookAdded.title
+      window.alert(`New book added: ${title}`)
+    },
+  })
   useEffect(() => {
-    console.log('WUUUUFWUUUUFWUUUUFWUUUUF')
     const storedToken = localStorage.getItem('token')
-    console.log('Retrieved Token on App Load:', storedToken)
     if (storedToken) {
       setToken(storedToken)
     }
