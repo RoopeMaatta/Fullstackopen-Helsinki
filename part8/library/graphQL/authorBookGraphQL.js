@@ -102,6 +102,23 @@ const resolvers = {
       }
     },
     allAuthors: async () => {
+      // try {
+      //   // Find all authors and populate their 'books' field
+      //   const authors = await Author.find().populate('books')
+
+      //   // Map through authors to calculate the book count for each
+      //   return authors.map(author => ({
+      //     name: author.name,
+      //     id: author._id,
+      //     born: author.born,
+      //     bookCount: author.books.length, // Calculate book count
+      //   }))
+      // } catch (error) {
+      //   console.error('Error fetching authors:', error)
+      //   throw new GraphQLError('Failed to fetch authors', {
+      //     extensions: { code: 'INTERNAL_SERVER_ERROR', error },
+      //   })
+      // }
       try {
         return await Author.aggregate([
           {
